@@ -22,17 +22,15 @@ The deployed product contains **no model calls**; the live demo is deterministic
 
 ## What the humans did
 
-**Manoj Kagitha**
-- Decided to build this project and chose the SECURE track. The idea (a firewall for tool-using agents) was proposed by Claude from the handbook; Manoj chose it, pushed for a stronger version, and rejected weaker alternatives.
+**Manoj Kagitha and Meghana Alaparthy (team)**
+- Chose the SECURE track and the problem together: a firewall for tool-using agents. Claude proposed the concept from the handbook; the team selected it, pushed for a stronger version, and rejected weaker alternatives.
 - Directed the build session by session: set the scope, approved or declined each action (deployments, pushes, history changes), and reviewed output before it was pushed. Corrected course several times, for example on commit attribution, which notes stay in the repo, and the declaration wording.
 - Asked Claude to attack its own firewall and to score the project honestly, then directed the fixes that followed (stronger detector, five bypass fixes, the provenance fix in the policy engine). Claude carried out the red-team work.
-- Ran the real-model evaluation himself, in his own terminal with his own Anthropic API key, and reported the results back; he chose the Anthropic API when AWS declined the Bedrock quota.
-- Owned the accounts and outside actions: set up the AWS account, owns the Anthropic account and API key, signed in to AWS, filed three Bedrock quota cases, submitted the Anthropic use-case form and Marketplace subscriptions, approved the AWS deployment, and revoked the API key after the run.
+- Ran the real-model evaluation on the team's own Anthropic API account and reported the results back; the team chose the Anthropic API when AWS declined the Bedrock quota.
+- Owned the accounts and outside actions: set up the AWS account used for the live demo, filed three Bedrock quota cases, submitted the Anthropic use-case form and Marketplace subscriptions, approved the AWS deployment, and revoked the API key after the run.
 - Asked the organizers and judges about provider restrictions, the declaration form and the live-demo requirement, and acted on their answers.
-- Approved the pushes to the repositories, read this declaration, and signed it.
-
-**Meghana Alaparthy**
-- Second team member. Read and agreed to this declaration before it was signed, and has collaborator access to the repository.
+- Ran the builder interviews together for the problem-evidence slide, and both present for judging and Q&A.
+- Both have collaborator access to the repository, reviewed this declaration, and signed it.
 
 **What Claude did, for comparison:** wrote the code, tests, infrastructure template, scripts and documents; proposed the design rules (no model in the enforcement path, policy decides, fail closed, human approval for risky or external actions); and ran the red-team analysis, the arena and the test runs when asked. Verification came from running the code: 70 tests, the evaluation, the 160-variant arena, the utility benchmark, the secret scan, the real-model run and the live AWS demo.
 
