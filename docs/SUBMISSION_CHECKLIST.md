@@ -15,7 +15,7 @@ Status: DONE = in repo; TODO = needs the team.
 | 9 | Risk registry / threat model | `THREAT_MODEL.md` | DONE |
 | 10 | Test execution logs | `logs/test_run.log`, `logs/eval.json`, `logs/arena.json` | DONE (60 tests, Oct 22; regenerate once more after the final merge) |
 | 11 | Governance charter / System Card | `SYSTEM_CARD.md` | DONE |
-| 12 | Pitch deck | `docs/deck/tripwire-pitch.pptx` (source: `docs/deck/slides.md`) | Deck DONE; rehearsal TODO |
+| 12 | Pitch deck | Two versions exist: (a) `docs/deck/tripwire-pitch.pptx` (source `docs/deck/slides.md`) and (b) a 12-slide online deck https://claude.ai/artifact/BvCX3KfUCbAsKkUVAXg1d2 (private until shared; download as PPTX/PDF). **Pick one** and delete or archive the other. Fill placeholders: interview quotes and the GitHub link (online deck slides 3 and 12) | Deck DONE; rehearsal TODO |
 
 | Guideline | Evidence |
 |---|---|

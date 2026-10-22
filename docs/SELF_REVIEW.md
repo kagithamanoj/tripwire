@@ -20,6 +20,12 @@ Still open: real-LLM results, user interviews, AWS deployment, deck. Estimated t
 Deployed on AWS (Lambda + DynamoDB + KMS) with a public demo URL; receipts are KMS-signed and re-verifiable from DynamoDB; 34 tests;
 CI builds and smoke-tests the container. Still open: real-LLM (Bedrock) results, user interviews, deck. Estimated ~75/100.
 
+## Update (v0.4, end of 2026-10-22)
+Rescored as a skeptical judge: Problem and Impact 11/20 (no interviews yet), Track Execution 19/25, Innovation 11/15, Trust/Safety/Governance 14/15,
+Technical Depth 13/15, Presentation 7/10 (deck done, not rehearsed). **About 75/100.** Not a 10/10, and nothing we can do tonight honestly makes it one.
+What moves it most: 3-5 real user interviews (+5 to +7), real-model results (+2 to +3), a rehearsed demo (+1 to +2).
+Done this round: red-team of our own firewall (docs/RED_TEAM_REPORT.md), persistent signed human approvals on AWS, 60 tests, pitch deck.
+
 ## Honest critique
 1. **Circular evaluation.** Attacks, defence and the naive agent were written by the same author. Results are a regression benchmark, not independent evidence.
 2. **0% attack success is partly structural.** Coarse taint blocks all risky tool calls after any untrusted read. The meaningful number is the **utility cost**, which is under-measured (8 benign documents).

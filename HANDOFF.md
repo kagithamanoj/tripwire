@@ -7,6 +7,11 @@ Added since the first handoff: red-team of our own firewall (`docs/RED_TEAM_REPO
 30% -> 0%, 5 bypasses fixed), persistent human approvals on AWS (live, tested end to end), 60 tests, redeployed. Approver token is generated in
 Secrets Manager; fetch it with the command in `docs/DEPLOY_AWS.md`.
 
+## Pitch deck (done)
+12 slides: https://claude.ai/artifact/BvCX3KfUCbAsKkUVAXg1d2 (private; open it, use Share to give Meghana access, and download as PPTX/PDF from its menu).
+Two placeholders to fill before presenting: **slide 3** (3-5 interview quotes; the segments are hypotheses until you interview people) and
+**slide 12** (public GitHub link). Update slide 11's first "Next" bullet once real-model numbers exist. Speaker notes are on every slide.
+
 ## Where things stand
 - Code, tests (34), docs, CI: done and pushed. CI runs tests, secret scan, arena, utility, and builds+smoke-tests the Docker image.
 - AWS: **deployed** in us-east-2 (stack `tripwire-demo`: Lambda Function URL, DynamoDB, KMS). Live URL is in `docs/DEPLOY_AWS.md`.
