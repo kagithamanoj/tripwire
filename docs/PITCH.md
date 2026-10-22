@@ -14,4 +14,4 @@
 10. **Limits and roadmap.** Self-authored attack set, coarse taint, origin trust. Next: Bedrock attacker, KMS signing, fine-grained taint. Ask.
 
 Tie-breakers to mention: container + health check (operational readiness); prompt-attack interception with measured numbers (security depth);
-direct impact (agent actions needing human review: measured, e.g. 10 of 160 attack variants).
+direct impact (agent actions needing human review: measured, e.g. 12 of 160 attack variants).

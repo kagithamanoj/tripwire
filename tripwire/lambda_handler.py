@@ -1,7 +1,8 @@
 """AWS Lambda entry point (Function URL, payload format v2).
 
-Env: KMS_KEY_ID (receipt signing key) and TABLE_NAME (DynamoDB). Without them it
-falls back to in-memory HMAC receipts, so the same code runs unconfigured.
+Env: KMS_KEY_ID (receipt signing key), TABLE_NAME (receipts), REVIEWS_TABLE (human-review items) and
+APPROVER_SECRET_ARN (Secrets Manager secret holding the approver token). Without them it falls back to
+in-memory HMAC receipts and disabled approvals, so the same code runs unconfigured.
 """
 
 import base64
@@ -18,12 +19,16 @@ def _setup():
     if _state:
         return _state
     key, table = os.environ.get("KMS_KEY_ID"), os.environ.get("TABLE_NAME")
+    _state.update(signer=None, sink=None, reviews=None, token=None)
     if key and table:
         from .aws_store import DynamoSink, KmsSigner
 
         _state.update(signer=KmsSigner(key), sink=DynamoSink(table))
-    else:
-        _state.update(signer=None, sink=None)
+    rtable, secret = os.environ.get("REVIEWS_TABLE"), os.environ.get("APPROVER_SECRET_ARN")
+    if rtable and secret:
+        from .aws_store import DynamoReviewStore, get_secret
+
+        _state.update(reviews=DynamoReviewStore(rtable), token=get_secret(secret))
     return _state
 
 
@@ -56,5 +61,7 @@ def _handle(event, method: str, path: str) -> dict:
         return ReceiptLog(signer=st["signer"], sink=st["sink"])
 
     loader = (lambda sid: (st["sink"].load(sid), st["signer"])) if st["sink"] else None
-    code, payload, ctype = api.handle(method, path, raw, log_factory, loader)
+    code, payload, ctype = api.handle(method, path, raw, log_factory, loader,
+                                      reviews=st.get("reviews"), approver_token=st.get("token"),
+                                      headers=event.get("headers") or {})
     return _resp(code, payload, ctype)

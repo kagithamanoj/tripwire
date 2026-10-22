@@ -1,3 +1,46 @@
+test_genuine_russian_text_not_garbled (test_adversarial.TestDetectorHoldout.test_genuine_russian_text_not_garbled) ... ok
+test_holdout_recall_and_false_positives (test_adversarial.TestDetectorHoldout.test_holdout_recall_and_false_positives) ... ok
+test_paraphrases_are_a_documented_detector_gap (test_adversarial.TestDetectorHoldout.test_paraphrases_are_a_documented_detector_gap) ... ok
+test_tag_character_smuggling (test_adversarial.TestDetectorHoldout.test_tag_character_smuggling) ... ok
+test_every_recipient_must_be_allowlisted (test_adversarial.TestEgressParsing.test_every_recipient_must_be_allowlisted) ... ok
+test_legit_destinations_still_allowed (test_adversarial.TestEgressParsing.test_legit_destinations_still_allowed) ... ok
+test_missing_or_renamed_destination_fails_closed (test_adversarial.TestEgressParsing.test_missing_or_renamed_destination_fails_closed) ... ok
+test_url_tricks (test_adversarial.TestEgressParsing.test_url_tricks) ... ok
+test_bad_bodies_give_4xx_not_500 (test_adversarial.TestLambdaHardening.test_bad_bodies_give_4xx_not_500) ... ok
+test_bad_event_shapes (test_adversarial.TestLambdaHardening.test_bad_event_shapes) ... ok
+test_internal_errors_do_not_leak (test_adversarial.TestLambdaHardening.test_internal_errors_do_not_leak) ... unhandled error
+Traceback (most recent call last):
+  File "/Volumes/SeagateMain/ManojVibeCoding/Hackathons/tripwire/tripwire/lambda_handler.py", line 46, in handler
+    return _handle(event, method, path)
+  File "/Volumes/SeagateMain/ManojVibeCoding/Hackathons/tripwire/tripwire/lambda_handler.py", line 64, in _handle
+    code, payload, ctype = api.handle(method, path, raw, log_factory, loader,
+                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                      reviews=st.get("reviews"), approver_token=st.get("token"),
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                      headers=event.get("headers") or {})
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/SeagateMain/ManojVibeCoding/Hackathons/tripwire/tests/test_adversarial.py", line 125, in <lambda>
+    api.handle = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("secret internals"))
+                                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/SeagateMain/ManojVibeCoding/Hackathons/tripwire/tests/test_adversarial.py", line 125, in <genexpr>
+    api.handle = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("secret internals"))
+RuntimeError: secret internals
+ok
+test_allowlisted_images_kept (test_adversarial.TestOutputFilter.test_allowlisted_images_kept) ... ok
+test_beacons_removed (test_adversarial.TestOutputFilter.test_beacons_removed) ... ok
+test_fuzz_never_crashes (test_adversarial.TestRobustness.test_fuzz_never_crashes) ... ok
+test_large_inputs_scan_quickly (test_adversarial.TestRobustness.test_large_inputs_scan_quickly) ... ok
+test_oversize_input_fails_closed_without_scanning (test_adversarial.TestRobustness.test_oversize_input_fails_closed_without_scanning) ... ok
+test_token_families_detected (test_adversarial.TestSecrets.test_token_families_detected) ... ok
+test_approve_is_signed_into_original_chain (test_approvals.TestApprovalFlow.test_approve_is_signed_into_original_chain) ... ok
+test_disabled_without_token_config (test_approvals.TestApprovalFlow.test_disabled_without_token_config) ... ok
+test_double_decision_conflicts (test_approvals.TestApprovalFlow.test_double_decision_conflicts) ... ok
+test_expired_item_cannot_be_approved (test_approvals.TestApprovalFlow.test_expired_item_cannot_be_approved) ... ok
+test_held_action_is_persisted_and_listed (test_approvals.TestApprovalFlow.test_held_action_is_persisted_and_listed) ... ok
+test_token_required (test_approvals.TestApprovalFlow.test_token_required) ... ok
+test_validation (test_approvals.TestApprovalFlow.test_validation) ... ok
+test_full_flow_on_dynamo_store (test_approvals.TestDynamoReviewStore.test_full_flow_on_dynamo_store) ... ok
+test_roundtrip_and_pending_filter (test_approvals.TestDynamoReviewStore.test_roundtrip_and_pending_filter) ... ok
 test_api_validation (test_tripwire.TestAws.test_api_validation) ... ok
 test_dynamo_roundtrip_then_verify (test_tripwire.TestAws.test_dynamo_roundtrip_then_verify) ... ok
 test_kms_rejects_forged_signature (test_tripwire.TestAws.test_kms_rejects_forged_signature) ... ok
@@ -34,6 +77,6 @@ test_user_supplied_recipient_allowed_in_value_mode (test_tripwire.TestValueTaint
 test_value_copied_from_untrusted_content_is_tainted (test_tripwire.TestValueTaint.test_value_copied_from_untrusted_content_is_tainted) ... ok
 
 ----------------------------------------------------------------------
-Ran 34 tests in 0.055s
+Ran 60 tests in 0.566s
 
 OK

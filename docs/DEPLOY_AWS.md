@@ -22,7 +22,21 @@ VPC. The Dockerfile is still built and smoke-tested in GitHub Actions (container
 | DynamoDB table (on-demand, TTL) | Durable, queryable receipts per session |
 | IAM role | Least privilege: `kms:Sign/Verify` on one key, `dynamodb:PutItem/Query` on one table, basic logging |
 | Lambda + Function URL | Serves the UI and API; auth type NONE (public demo) |
+| Reviews table (DynamoDB, TTL 7d) | Persisted human-review items |
+| Secrets Manager secret | Generated approver token (about $0.40/month) |
 | Log group | 14-day retention |
+
+## Human approvals (live)
+Held actions are saved in DynamoDB. An approver calls the API with the generated token; each decision is appended to the original
+session's KMS-signed chain. Items not decided within 15 minutes are treated as denied (fail closed); a timed-out item cannot be approved.
+```bash
+# Fetch the token yourself (never commit or paste it anywhere public):
+ARN=$(aws cloudformation describe-stacks --stack-name tripwire-demo --query 'Stacks[0].Outputs[?OutputKey==`ApproverSecretArn`].OutputValue' --output text)
+aws secretsmanager get-secret-value --secret-id "$ARN" --query SecretString --output text
+curl -H "x-approver-token: <token>" $URL/api/reviews                                   # list pending
+curl -X POST -H "x-approver-token: <token>" $URL/api/reviews/<id> -d '{"approve":true,"reviewer":"name"}'
+```
+The web page has a "Human approvals" card that does the same (paste the token; it stays in the browser tab).
 
 ## Deploy / update / tear down
 Prereqs: AWS CLI v2, `aws login --region us-east-2 --profile tripwire`.
@@ -43,7 +57,8 @@ curl $URL/api/arena
 ## Known limits and risks (be upfront with judges)
 - The URL is public and unauthenticated by design for the demo. Abuse is bounded by Lambda cost only; no reserved-concurrency cap
   (new accounts often cannot reserve). The AWS budget alarm is the backstop. Add WAF/Cognito for real use.
-- Review queue is still in memory per request; approvals are not yet persisted/notified (SNS + endpoint is next).
+- Approvals are persisted, but there is no push notification yet (SNS email/Slack is next) and approver auth is one shared token
+  (use Cognito/IAM per-person identity for real use; the receipt records the reviewer name the caller supplies).
 - KMS signing proves the gateway signed each receipt. It does not prove the gateway itself was uncompromised.
 
 ## Cost

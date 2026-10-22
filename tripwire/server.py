@@ -1,18 +1,26 @@
-"""Local demo web server (stdlib only). Demo-grade: no auth, no persistence.
+"""Local demo web server (stdlib only). Demo-grade: no auth on the demo endpoints, no persistence.
 
-On AWS the same API runs in Lambda (see lambda_handler.py).
+Human approvals are enabled locally by setting TRIPWIRE_APPROVER_TOKEN. On AWS the same API runs
+in Lambda (see lambda_handler.py).
 """
 
+import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from . import api
+from .review import MemoryReviewStore
+
+_REVIEWS = MemoryReviewStore()
 
 
 class Handler(BaseHTTPRequestHandler):
     def _run(self, method: str) -> None:
-        n = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(n) if 0 < n <= api.MAX_BODY else b""
-        code, payload, ctype = api.handle(method, self.path, body if n <= api.MAX_BODY else b"x" * (api.MAX_BODY + 1))
+        n = int(self.headers.get("Content-Length", 0) or 0)
+        body = self.rfile.read(n) if 0 < n <= api.MAX_BODY else (b"x" * (api.MAX_BODY + 1) if n else b"")
+        token = os.environ.get("TRIPWIRE_APPROVER_TOKEN")
+        code, payload, ctype = api.handle(
+            method, self.path, body, reviews=_REVIEWS if token else None,
+            approver_token=token, headers=dict(self.headers))
         self.send_response(code)
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(payload)))

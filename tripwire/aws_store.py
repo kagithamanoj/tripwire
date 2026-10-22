@@ -58,3 +58,41 @@ class DynamoSink:
             TableName=self.table, KeyConditionExpression="session_id = :s",
             ExpressionAttributeValues={":s": {"S": session_id}}, ConsistentRead=True)
         return [json.loads(i["receipt"]["S"]) for i in r.get("Items", [])]
+
+
+class DynamoReviewStore:
+    """Pending/decided human-review items. Table key: id (S); `ttl` lets DynamoDB clean up old items."""
+
+    def __init__(self, table: str, client=None, ttl_days: int = 7):
+        self.table = table
+        self.client = client or _client("dynamodb")
+        self.ttl_s = ttl_days * 86400
+
+    def put(self, item: dict) -> None:
+        self.client.put_item(TableName=self.table, Item={
+            "id": {"S": item["id"]},
+            "status": {"S": item["status"]},
+            "item": {"S": json.dumps(item, sort_keys=True)},
+            "ttl": {"N": str(int(time.time()) + self.ttl_s)},
+        })
+
+    def get(self, rid: str) -> dict | None:
+        r = self.client.get_item(TableName=self.table, Key={"id": {"S": rid}}, ConsistentRead=True)
+        return json.loads(r["Item"]["item"]["S"]) if "Item" in r else None
+
+    def pending(self) -> list[dict]:
+        """Table scan: fine for a demo-sized queue; use a status GSI at scale."""
+        out, kw = [], {}
+        while True:
+            r = self.client.scan(TableName=self.table, FilterExpression="#s = :p",
+                                 ExpressionAttributeNames={"#s": "status"},
+                                 ExpressionAttributeValues={":p": {"S": "pending"}}, **kw)
+            out += [json.loads(i["item"]["S"]) for i in r.get("Items", [])]
+            if "LastEvaluatedKey" not in r:
+                return out
+            kw = {"ExclusiveStartKey": r["LastEvaluatedKey"]}
+
+
+def get_secret(arn: str, client=None) -> str:
+    c = client or _client("secretsmanager")
+    return c.get_secret_value(SecretId=arn)["SecretString"]

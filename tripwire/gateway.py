@@ -75,7 +75,8 @@ class Gateway:
         else:
             d = Decision("allow", "policy disabled", "unknown")
         if d.action == "review":
-            d.review_id = self.queue.submit("tool", {"tool": tool, "args": args, "origin": origin}, d.reason)
+            d.review_id = self.queue.submit(
+                "tool", {"tool": tool, "args": args, "origin": origin, "session": self.log.session_id}, d.reason)
         self.log.append({
             "type": "tool", "tool": tool, "origin": origin, "tainted": tainted,
             "action": d.action, "reason": d.reason, "risk": d.risk, "review_id": d.review_id,

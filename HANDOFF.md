@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-22. Repo: github.com/kagithamanoj/tripwire (private). Folder: `Hackathons/tripwire`.
 
+## Update (later on 2026-10-22)
+Added since the first handoff: red-team of our own firewall (`docs/RED_TEAM_REPORT.md`: detector recall 29% -> 100% on a holdout, false positives
+30% -> 0%, 5 bypasses fixed), persistent human approvals on AWS (live, tested end to end), 60 tests, redeployed. Approver token is generated in
+Secrets Manager; fetch it with the command in `docs/DEPLOY_AWS.md`.
+
 ## Where things stand
 - Code, tests (34), docs, CI: done and pushed. CI runs tests, secret scan, arena, utility, and builds+smoke-tests the Docker image.
 - AWS: **deployed** in us-east-2 (stack `tripwire-demo`: Lambda Function URL, DynamoDB, KMS). Live URL is in `docs/DEPLOY_AWS.md`.

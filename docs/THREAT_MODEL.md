@@ -33,6 +33,8 @@ have access to the gateway host or signing key. (Insider / host compromise is ou
 
 | T15 | Value-taint blind spot | Injection makes the model call a high-risk tool with arguments that never appear in the document (e.g. infers an internal address) | Egress allowlist; critical tools always use session taint; `taint_mode="session"` available | `test_known_gap_value_not_copied_from_document` | **Medium**: value mode trades some safety for utility; choose per deployment |
 
+| T16 | Approver token theft or sharing | Token leaked, so anyone can approve held actions | Token in Secrets Manager (not in code/env), constant-time compare, per-decision signed receipt, 15-min expiry | `tests/test_approvals.py` | **Medium**: single shared token, reviewer name is self-declared; use per-person identity (Cognito/IAM) in production |
+
 ## Fail-closed behaviours
 Unknown tools denied. Unreviewed items expire to deny. Critical actions in tainted context are blocked, not queued.
 

@@ -44,6 +44,14 @@ class ReceiptLog:
     def verify(self) -> tuple[bool, int | None]:
         return verify(self.receipts, self.signer)
 
+    @classmethod
+    def resume(cls, receipts: list[dict], session_id: str, signer=None, sink=None) -> "ReceiptLog":
+        """Continue an existing signed chain (e.g. to record a later human decision)."""
+        log = cls(signer=signer, sink=sink)
+        log.session_id = session_id
+        log.receipts = list(receipts)
+        return log
+
     def append(self, event: dict) -> dict:
         prev = self.receipts[-1]["hash"] if self.receipts else GENESIS
         core = {"seq": len(self.receipts), "ts": round(time.time(), 3), "event": event}
