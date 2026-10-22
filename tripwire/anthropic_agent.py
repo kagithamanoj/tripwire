@@ -23,7 +23,7 @@ def _tools() -> list[dict]:
              "input_schema": t["toolSpec"]["inputSchema"]["json"]} for t in tool_config()["tools"]]
 
 
-def _post(body: dict, key: str, timeout: float = 60.0) -> dict:
+def _post(body: dict, key: str, timeout: float = 30.0) -> dict:
     req = urllib.request.Request(
         URL, data=json.dumps(body).encode(), method="POST",
         headers={"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"})
@@ -56,6 +56,10 @@ class AnthropicAgent:
                     time.sleep(2 ** attempt)
                     continue
                 raise RuntimeError(f"Anthropic API error: HTTP {e.code}") from None
+            except TimeoutError:
+                if attempt < self.retries:
+                    continue
+                raise RuntimeError("Anthropic API timed out") from None
             except urllib.error.URLError as e:
                 raise RuntimeError(f"Anthropic API unreachable: {type(e.reason).__name__}") from None
         self.calls += 1

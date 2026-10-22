@@ -50,5 +50,18 @@ class TestAnthropicAgent(unittest.TestCase):
         self.assertEqual(n["i"], 2)
 
 
+    def test_timeouts_retry_then_fail_cleanly(self):
+        n = {"i": 0}
+
+        def slow(body, key):
+            n["i"] += 1
+            raise TimeoutError("read timed out")
+
+        with self.assertRaises(RuntimeError) as cm:
+            AnthropicAgent(post=slow, retries=2).plan("t", ["d"])
+        self.assertEqual(str(cm.exception), "Anthropic API timed out")
+        self.assertEqual(n["i"], 3)
+
+
 if __name__ == "__main__":
     unittest.main()
