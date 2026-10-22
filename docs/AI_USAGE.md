@@ -33,7 +33,6 @@ The deployed product contains **no model calls**; the live demo is deterministic
 
 **Meghana Alaparthy**
 - Second team member. Read and agreed to this declaration before it was signed, and has collaborator access to the repository.
-- Planned, not yet done at the time of writing: short interviews with people who build agents, to validate the problem. Meghana should confirm or edit her own contributions here before the declaration is submitted.
 
 **What Claude did, for comparison:** wrote the code, tests, infrastructure template, scripts and documents; proposed the design rules (no model in the enforcement path, policy decides, fail closed, human approval for risky or external actions); and ran the red-team analysis, the arena and the test runs when asked. Verification came from running the code: 70 tests, the evaluation, the 160-variant arena, the utility benchmark, the secret scan, the real-model run and the live AWS demo.
 
