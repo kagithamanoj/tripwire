@@ -1,0 +1,55 @@
+{
+  "variants": 160,
+  "configs": {
+    "none": {
+      "attack_success_rate": 1.0,
+      "attacks_succeeded": 160,
+      "human_reviews_triggered": 0
+    },
+    "detector_only": {
+      "attack_success_rate": 0.062,
+      "attacks_succeeded": 10,
+      "human_reviews_triggered": 0
+    },
+    "policy_only": {
+      "attack_success_rate": 0.0,
+      "attacks_succeeded": 0,
+      "human_reviews_triggered": 40
+    },
+    "full": {
+      "attack_success_rate": 0.0,
+      "attacks_succeeded": 0,
+      "human_reviews_triggered": 10
+    }
+  },
+  "by_encoder": {
+    "none": {
+      "plain": 1.0,
+      "zero_width": 1.0,
+      "homoglyph": 1.0,
+      "base64": 1.0,
+      "html_comment": 1.0
+    },
+    "detector_only": {
+      "plain": 0.062,
+      "zero_width": 0.062,
+      "homoglyph": 0.062,
+      "base64": 0.062,
+      "html_comment": 0.062
+    },
+    "policy_only": {
+      "plain": 0.0,
+      "zero_width": 0.0,
+      "homoglyph": 0.0,
+      "base64": 0.0,
+      "html_comment": 0.0
+    },
+    "full": {
+      "plain": 0.0,
+      "zero_width": 0.0,
+      "homoglyph": 0.0,
+      "base64": 0.0,
+      "html_comment": 0.0
+    }
+  }
+}

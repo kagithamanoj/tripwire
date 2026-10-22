@@ -1,0 +1,27 @@
+test_benign_only_known_hard_negative_flagged (test_tripwire.TestDetector.test_benign_only_known_hard_negative_flagged) ... ok
+test_known_evasions_are_documented_misses (test_tripwire.TestDetector.test_known_evasions_are_documented_misses) ... ok
+test_obfuscated_attacks_detected (test_tripwire.TestDetector.test_obfuscated_attacks_detected) ... ok
+test_arena_layers (test_tripwire.TestEndToEnd.test_arena_layers) ... ok
+test_every_tool_attack_succeeds_unprotected_and_fails_protected (test_tripwire.TestEndToEnd.test_every_tool_attack_succeeds_unprotected_and_fails_protected) ... ok
+test_policy_alone_stops_detector_evasion (test_tripwire.TestEndToEnd.test_policy_alone_stops_detector_evasion) ... ok
+test_human_approval_is_logged (test_tripwire.TestGateway.test_human_approval_is_logged) ... ok
+test_output_filter (test_tripwire.TestGateway.test_output_filter) ... ok
+test_receipts_never_store_full_content (test_tripwire.TestGateway.test_receipts_never_store_full_content) ... ok
+test_user_origin_not_tainted (test_tripwire.TestGateway.test_user_origin_not_tainted) ... ok
+test_decodes_base64_only_when_readable (test_tripwire.TestNormalize.test_decodes_base64_only_when_readable) ... ok
+test_strips_invisible_and_homoglyphs (test_tripwire.TestNormalize.test_strips_invisible_and_homoglyphs) ... ok
+test_egress_allowlist (test_tripwire.TestPolicy.test_egress_allowlist) ... ok
+test_secrets_blocked_and_redacted (test_tripwire.TestPolicy.test_secrets_blocked_and_redacted) ... ok
+test_taint_matrix (test_tripwire.TestPolicy.test_taint_matrix) ... ok
+test_unknown_tool_denied (test_tripwire.TestPolicy.test_unknown_tool_denied) ... ok
+test_deletion_detected (test_tripwire.TestReceipts.test_deletion_detected) ... ok
+test_tamper_detected (test_tripwire.TestReceipts.test_tamper_detected) ... ok
+test_valid_chain (test_tripwire.TestReceipts.test_valid_chain) ... ok
+test_wrong_key_rejected (test_tripwire.TestReceipts.test_wrong_key_rejected) ... ok
+test_double_decision_rejected (test_tripwire.TestReviewQueue.test_double_decision_rejected) ... ok
+test_expiry_fails_closed (test_tripwire.TestReviewQueue.test_expiry_fails_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.022s
+
+OK

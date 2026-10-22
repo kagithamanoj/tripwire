@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+._*
+.DS_Store
+.env
+*.pem
+.venv/
+cdk.out/
