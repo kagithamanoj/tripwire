@@ -13,12 +13,16 @@ Update this table honestly if you use any other GenAI or code-completion tool (C
 The shipped system contains no LLM calls. (If Bedrock is added later, list model IDs and purpose here.)
 
 ## What the humans did
-TODO (team to complete): ideation decisions, review/changes made, testing performed, user research.
+- Problem selection and track: Manoj chose the problem (a firewall for tool-using agents) and the SECURE track; Meghana Alaparthy is the second team member.
+- Direction: Manoj directed the build session by session (scope, the red-team pass on our own firewall, the AWS deployment, the recorded GCP fallback decision in HANDOFF.md) and reviewed all output before it was pushed.
+- Accounts and approvals: Manoj owns the AWS account work (deployment approvals, the monthly budget alarm, three Bedrock service-quota cases filed Oct 22, teardown plan) and the GitHub repositories.
+- Verification: the metrics in the README and pitch come from running the code (60 tests, eval, arena, utility benchmark, live demo), not from model claims.
+- Meghana's own additions to this section: to be appended by her before submission.
 
 ## Declaration
 We declare that the above is a complete account of generative-AI and automated coding tools used in this project.
 
 | Name | GitHub | Signature | Date |
 |---|---|---|---|
-| Manoj Kagitha | @kagithamanoj | ______________ | ________ |
-| Meghana Alaparthy | @meghana-alaparthy | ______________ | ________ |
+| Manoj Kagitha | @kagithamanoj | Manoj Kagitha (typed) | 2026-10-22 |
+| Meghana Alaparthy | @meghana-alaparthy | Meghana Alaparthy (typed) | 2026-10-22 |
