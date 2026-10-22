@@ -23,11 +23,17 @@ CI builds and smoke-tests the container. Still open: real-LLM (Bedrock) results,
 ## Honest critique
 1. **Circular evaluation.** Attacks, defence and the naive agent were written by the same author. Results are a regression benchmark, not independent evidence.
 2. **0% attack success is partly structural.** Coarse taint blocks all risky tool calls after any untrusted read. The meaningful number is the **utility cost**, which is under-measured (8 benign documents).
-3. **Detector recall is 81.2%** with a known false positive on security-training text.
+3. **Detector recall** on the post-build holdout set went 29.2% -> 100% with false positives 30% -> 0% after fixes; that set is now tuned against, so treat the after numbers as optimistic (see `docs/RED_TEAM_REPORT.md`).
 4. **Simulated agent and tools.** No real LLM, no real side effects.
 5. **Origin labelling is trusted** from the host app (threat T11).
 6. **Demo endpoint is public and unauthenticated** (deployed on AWS; see `DEPLOY_AWS.md` limits).
 7. **No user validation** of the problem.
+
+## Update (v0.4, submission day)
+Persistent human approvals are live on AWS (DynamoDB reviews table, approver token in Secrets Manager, KMS-signed decisions, 15-minute fail-closed timeout);
+60 tests, CI green on main, live demo URL verified working; pitch deck built (`docs/deck/tripwire-pitch.pptx`).
+Still open: real-LLM (Bedrock) results (AWS quota cases pending; only the account owner can file the use-case form), user interviews,
+AI_USAGE signatures, making the repo public at submission. Estimated total now ~78/100. The circular-evaluation critique above still stands and remains the main gap.
 
 ## Priority fixes (highest judged value first)
 1. Real LLM agent via Bedrock behind the gateway + LLM attacker, report held-out numbers.

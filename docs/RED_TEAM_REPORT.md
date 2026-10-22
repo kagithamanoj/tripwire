@@ -36,4 +36,4 @@ Also verified: 2,000 random-Unicode fuzz inputs never crashed the detector or fi
 - Value-level taint can miss a high-risk call whose arguments never appeared in the document (T15).
 - Attack and benign sets are self-authored; no independent attacker yet (Bedrock evaluation pending on quota).
 - Secrets in non-obvious encodings (base64-wrapped, split across arguments) are not detected.
-- The review queue approval flow on AWS is not yet persisted (in progress).
+- The review queue approval flow on AWS is now persisted (fixed after this report): reviews live in a DynamoDB table, the approver token sits in Secrets Manager, and decisions are appended to the session's KMS-signed chain. See `docs/DEPLOY_AWS.md`.

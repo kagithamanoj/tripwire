@@ -3,6 +3,10 @@
 **Don't trust the agent. Verify it.**  
 Track: **SECURE** (All Day AI Hackathon 2026)
 
+[![CI](https://github.com/kagithamanoj/tripwire/actions/workflows/ci.yml/badge.svg)](https://github.com/kagithamanoj/tripwire/actions/workflows/ci.yml)
+
+**Live demo:** https://qtu25iuq5qyc72x642eofcef2a0bbogo.lambda-url.us-east-2.on.aws/ (public, no auth, demo data only). Check it: `curl <url>/healthz` returns `{"ok": true}`.
+
 Tripwire is a firewall for tool-using AI agents. It scans what the agent reads, remembers that the agent has seen untrusted
 content ("taint") so risky actions need a human, filters what it says, and signs every decision into a tamper-evident log.
 A built-in red-team arena attacks the defences with 160 mutated injections and publishes the score.
