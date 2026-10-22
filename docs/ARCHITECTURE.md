@@ -93,19 +93,8 @@ through on our attack set; full stacks both and cuts the human-review load.
 | `tripwire/server.py` | Demo web UI and JSON API (stdlib) |
 | `tripwire/cli.py` | `demo`, `eval`, `arena`, `serve` |
 
-## AWS deployment target (plan; not yet deployed)
+## AWS deployment (live)
 
-```mermaid
-flowchart LR
-    Client --> APIGW[API Gateway + WAF]
-    APIGW --> AR[App Runner / Fargate<br/>Tripwire container from ECR]
-    AR --> DDB[(DynamoDB<br/>receipts + review queue)]
-    AR --> KMS[KMS<br/>asymmetric sign key]
-    AR --> BR[Bedrock<br/>optional LLM attacker / judge]
-    AR --> SNS[SNS -> email/Slack<br/>approval requests]
-    AR --> CW[CloudWatch logs + alarms]
-```
-
-What changes from local mode: `HmacSigner` becomes a KMS signer (private key never leaves KMS, so even
-an operator cannot forge receipts); receipts and the review queue move from memory to DynamoDB; approvals
-notify through SNS. See `DEPLOY_AWS.md`.
+Lambda Function URL -> Lambda (stdlib Python) -> KMS (receipt signing) + DynamoDB (receipts). See `DEPLOY_AWS.md` for the diagram,
+resources, scripts and limits. The signer and storage are pluggable (`HmacSigner`/`KmsSigner`, in-memory/`DynamoSink`), so the same
+gateway code runs locally and on AWS.

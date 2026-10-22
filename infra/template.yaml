@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Tripwire demo - Lambda Function URL + DynamoDB receipts + KMS signing key
+
+Resources:
+  SigningKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: Tripwire receipt signing key (asymmetric; private key never leaves KMS)
+      KeySpec: ECC_NIST_P256
+      KeyUsage: SIGN_VERIFY
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AccountAdministration
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: "kms:*"
+            Resource: "*"
+
+  SigningKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: alias/tripwire-receipts
+      TargetKeyId: !Ref SigningKey
+
+  ReceiptsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: session_id, AttributeType: S }
+        - { AttributeName: seq, AttributeType: N }
+      KeySchema:
+        - { AttributeName: session_id, KeyType: HASH }
+        - { AttributeName: seq, KeyType: RANGE }
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/tripwire-demo
+      RetentionInDays: 14
+
+  FunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: tripwire-least-privilege
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: ["kms:Sign", "kms:Verify"]
+                Resource: !GetAtt SigningKey.Arn
+              - Effect: Allow
+                Action: ["dynamodb:PutItem", "dynamodb:Query"]
+                Resource: !GetAtt ReceiptsTable.Arn
+
+  Function:
+    Type: AWS::Lambda::Function
+    DependsOn: LogGroup
+    Properties:
+      FunctionName: tripwire-demo
+      Runtime: python3.13
+      Handler: tripwire.lambda_handler.handler
+      Code: ../build/lambda
+      MemorySize: 256
+      Timeout: 20
+      Role: !GetAtt FunctionRole.Arn
+      Environment:
+        Variables:
+          KMS_KEY_ID: !Ref SigningKey
+          TABLE_NAME: !Ref ReceiptsTable
+
+  FunctionUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      AuthType: NONE
+      TargetFunctionArn: !GetAtt Function.Arn
+
+  UrlPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Function
+      Action: lambda:InvokeFunctionUrl
+      Principal: "*"
+      FunctionUrlAuthType: NONE
+
+  InvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Function
+      Action: lambda:InvokeFunction
+      Principal: "*"
+      InvokedViaFunctionUrl: true
+
+Outputs:
+  Url:
+    Value: !GetAtt FunctionUrl.FunctionUrl
+  KmsKeyId:
+    Value: !Ref SigningKey
+  Table:
+    Value: !Ref ReceiptsTable

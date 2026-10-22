@@ -1,3 +1,8 @@
+test_api_validation (test_tripwire.TestAws.test_api_validation) ... ok
+test_dynamo_roundtrip_then_verify (test_tripwire.TestAws.test_dynamo_roundtrip_then_verify) ... ok
+test_kms_rejects_forged_signature (test_tripwire.TestAws.test_kms_rejects_forged_signature) ... ok
+test_kms_signed_chain_verifies_and_detects_tamper (test_tripwire.TestAws.test_kms_signed_chain_verifies_and_detects_tamper) ... ok
+test_lambda_handler_end_to_end (test_tripwire.TestAws.test_lambda_handler_end_to_end) ... ok
 test_parses_tool_use_blocks_with_fake_client (test_tripwire.TestBedrockAdapter.test_parses_tool_use_blocks_with_fake_client) ... ok
 test_requires_model_id (test_tripwire.TestBedrockAdapter.test_requires_model_id) ... ok
 test_benign_only_known_hard_negative_flagged (test_tripwire.TestDetector.test_benign_only_known_hard_negative_flagged) ... ok
@@ -29,6 +34,6 @@ test_user_supplied_recipient_allowed_in_value_mode (test_tripwire.TestValueTaint
 test_value_copied_from_untrusted_content_is_tainted (test_tripwire.TestValueTaint.test_value_copied_from_untrusted_content_is_tainted) ... ok
 
 ----------------------------------------------------------------------
-Ran 29 tests in 0.062s
+Ran 34 tests in 0.055s
 
 OK

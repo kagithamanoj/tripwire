@@ -8,7 +8,7 @@ Status: DONE = in repo; TODO = needs the team.
 | 2 | Elevator pitch | README top; `PITCH.md` slide 1 | DONE |
 | 3 | Problem definition + personas | `PITCH.md` slides 2-3; **needs real interviews** | PARTIAL |
 | 4 | Architecture diagram | `ARCHITECTURE.md` (Mermaid) | DONE |
-| 5 | Live demo link or local script | `python -m tripwire demo` / `serve`; AWS URL after deploy | PARTIAL |
+| 5 | Live demo link or local script | `python -m tripwire demo` / `serve`; live AWS URL in `DEPLOY_AWS.md` | DONE |
 | 6 | Public GitHub repo | github.com (see README) | DONE after push |
 | 7 | Technical inventory | `INVENTORY` section in README (stdlib only) | DONE |
 | 8 | AI usage declaration | `AI_USAGE.md` | TODO: complete + sign |

@@ -16,6 +16,10 @@ Added: value-level taint (7/8 legit tasks vs 1/8 with session taint, same 3/3 at
 Bedrock agent adapter (unit-tested with a fake client; **not run against the real service**), 29 tests.
 Still open: real-LLM results, user interviews, AWS deployment, deck. Estimated total now ~72/100.
 
+## Update (v0.3)
+Deployed on AWS (Lambda + DynamoDB + KMS) with a public demo URL; receipts are KMS-signed and re-verifiable from DynamoDB; 34 tests;
+CI builds and smoke-tests the container. Still open: real-LLM (Bedrock) results, user interviews, deck. Estimated ~75/100.
+
 ## Honest critique
 1. **Circular evaluation.** Attacks, defence and the naive agent were written by the same author. Results are a regression benchmark, not independent evidence.
 2. **0% attack success is partly structural.** Coarse taint blocks all risky tool calls after any untrusted read. The meaningful number is the **utility cost**, which is under-measured (8 benign documents).
