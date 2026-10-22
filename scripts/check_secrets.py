@@ -6,7 +6,7 @@ import sys
 
 PATTERNS = {
     "aws_access_key": re.compile(r"AKIA[0-9A-Z]{16}"),
-    "api_key": re.compile(r"sk-[A-Za-z0-9]{20,}"),
+    "api_key": re.compile(r"sk-[A-Za-z0-9_\-]{20,}"),
     "private_key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "github_token": re.compile(r"gh[pousr]_[A-Za-z0-9]{30,}"),
     "aws_secret": re.compile(r"(?i)aws_secret_access_key\s*[=:]\s*\S{20,}"),
