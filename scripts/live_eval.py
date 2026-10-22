@@ -29,7 +29,7 @@ INJECTION_WORDS = re.compile(r"inject|suspicious|malicious|instruction.{0,20}(in
 def make_agent():
     provider = os.environ.get("TRIPWIRE_PROVIDER") or ("anthropic" if os.environ.get("ANTHROPIC_API_KEY") else "bedrock")
     if provider == "anthropic" and not os.environ.get("ANTHROPIC_API_KEY"):
-        sys.exit("ANTHROPIC_API_KEY is not set in THIS terminal tab. Export it here first (see HANDOFF.md), then rerun.")
+        sys.exit("ANTHROPIC_API_KEY is not set in THIS terminal tab. Load your key into this tab from your password manager first, then rerun.")
     if provider == "bedrock" and not os.environ.get("TRIPWIRE_MODEL_ID"):
         sys.exit("No provider configured: set ANTHROPIC_API_KEY (preferred) in this terminal tab, or TRIPWIRE_MODEL_ID for Bedrock.")
     if provider == "anthropic":

@@ -71,4 +71,4 @@ Region has Claude models including inference profile `us.anthropic.claude-haiku-
 pip install -r requirements-aws.txt
 AWS_PROFILE=tripwire AWS_REGION=us-east-2 TRIPWIRE_MODEL_ID=us.anthropic.claude-haiku-5-5 python3 scripts/live_eval.py
 ```
-Status: not yet run (see SELF_REVIEW).
+Not used: AWS declined the Bedrock quota for this account. The real-model evaluation ran through the Anthropic API instead (see docs/REAL_MODEL_EVAL.md).

@@ -37,9 +37,9 @@ docker build -t tripwire . && docker run -p 8080:8080 tripwire
 ```
 
 ## Docs
-Start with [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md), then [ARCHITECTURE](docs/ARCHITECTURE.md),
-[THREAT_MODEL](docs/THREAT_MODEL.md), [SYSTEM_CARD](docs/SYSTEM_CARD.md), [DEPLOY_AWS](docs/DEPLOY_AWS.md),
-[SUBMISSION_CHECKLIST](docs/SUBMISSION_CHECKLIST.md), [PITCH](docs/PITCH.md), [AI_USAGE](docs/AI_USAGE.md).
+[Architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MODEL.md), [red-team report](docs/RED_TEAM_REPORT.md),
+[real-model evaluation](docs/REAL_MODEL_EVAL.md), [system card](docs/SYSTEM_CARD.md), [AWS deployment](docs/DEPLOY_AWS.md),
+[AI usage declaration](docs/AI_USAGE.md).
 
 ## Technical inventory
 Python standard library only. No third-party packages, no ML models and no keys in the product. The optional real-model evaluation script calls the Anthropic API with a key you supply in your shell. AWS (Lambda, KMS, DynamoDB) is used for the live demo.

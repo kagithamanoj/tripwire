@@ -14,7 +14,7 @@ The shipped product contains no LLM calls. The evaluation script `scripts/live_e
 
 ## What the humans did
 - Problem selection and track: Manoj chose the problem (a firewall for tool-using agents) and the SECURE track; Meghana Alaparthy is the second team member.
-- Direction: Manoj directed the build session by session (scope, the red-team pass on our own firewall, the AWS deployment, the recorded GCP fallback decision in HANDOFF.md) and reviewed all output before it was pushed.
+- Direction: Manoj directed the build session by session (scope, the red-team pass on our own firewall, the AWS deployment, the decision to run the real-model evaluation through the Anthropic API when AWS declined the Bedrock quota) and reviewed all output before it was pushed.
 - Accounts and approvals: Manoj owns the AWS account work (deployment approvals, the monthly budget alarm, three Bedrock service-quota cases filed Oct 22, teardown plan) and the GitHub repositories.
 - Verification: the metrics in the README and pitch come from running the code (60 tests, eval, arena, utility benchmark, live demo), not from model claims.
 - Meghana's own additions to this section: to be appended by her before submission.
