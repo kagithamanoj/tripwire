@@ -7,6 +7,19 @@ Last updated: 2026-10-22. Repo: github.com/kagithamanoj/tripwire (private). Fold
 - AWS: **deployed** in us-east-2 (stack `tripwire-demo`: Lambda Function URL, DynamoDB, KMS). Live URL is in `docs/DEPLOY_AWS.md`.
 - Real-LLM (Bedrock) evaluation: **blocked** (details below). Everything else works without it.
 
+## AWS credits status (earned $20 per task, up to $100)
+- Done: Lambda web app (our deploy), cost budget (`tripwire-monthly-20usd`, created by Claude, **no email alert yet**), EC2 launch (t3.micro,
+  launched then terminated), RDS database (db.t4g.micro, created then deleted). Manoj reported the credits page showed progress.
+- Still to earn: **"Use a foundation model in the Bedrock playground"**: blocked until Bedrock access works (below).
+- All temporary resources were deleted and verified (0 EC2 instances, 0 RDS, 0 stray secrets). Only stack `tripwire-demo` remains.
+- To add an email alert: Billing -> Budgets -> `tripwire-monthly-20usd` -> Edit -> notifications.
+
+## Bedrock status
+- Account Bedrock token quota is **0** for Claude and Amazon Nova (every call returns throttling / "not available for this account").
+- Manoj submitted 3 service-quota cases on 2026-10-22 (Sonnet, Haiku, Opus), status "Work in progress". Check Support -> Cases.
+- Separately, Anthropic models need the **use case details form** submitted in the Bedrock console (Claude 4.x said so). Only Manoj can do it.
+- Once approved: try the playground (also earns the credit), then run `scripts/live_eval.py`.
+
 ## Do these first tomorrow (in order)
 1. **Renew AWS login** (it lasts ~12h): `aws login --region us-east-2 --profile tripwire`
 2. **Check the budget alarm exists** (Billing -> Budgets, $20) and look at Credits to see what they cover (`docs/COST.md`).
