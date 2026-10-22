@@ -45,7 +45,7 @@ def _demo_one(attack: dict) -> None:
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="tripwire")
-    p.add_argument("command", choices=["demo", "eval", "arena", "serve"])
+    p.add_argument("command", choices=["demo", "eval", "arena", "utility", "serve"])
     p.add_argument("--port", type=int, default=8080)
     a = p.parse_args(argv)
     if a.command == "demo":
@@ -54,6 +54,9 @@ def main(argv=None) -> int:
         print(json.dumps(arena.run_seed_eval(), indent=2))
     elif a.command == "arena":
         print(json.dumps(arena.run_arena(), indent=2))
+    elif a.command == "utility":
+        from .utility import run_utility
+        print(json.dumps(run_utility(), indent=2))
     else:
         from .server import serve
         serve(a.port)

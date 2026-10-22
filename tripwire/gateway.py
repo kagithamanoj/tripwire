@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
 from . import detector
-from .policy import Decision, Policy, redact
+from .policy import Decision, Policy, atoms, redact
 from .receipts import ReceiptLog
 from .review import ReviewQueue
 
@@ -24,13 +24,26 @@ class Ingest:
 
 
 class Gateway:
-    def __init__(self, policy=None, log=None, queue=None, use_detector=True, use_policy=True):
+    def __init__(self, policy=None, log=None, queue=None, use_detector=True, use_policy=True,
+                 taint_mode="session"):
+        """taint_mode='session': any untrusted read taints every risky call (safest).
+        taint_mode='value': high-risk calls are tainted only if an argument value came from
+        untrusted content and not from the user. Critical tools always use session taint."""
+        if taint_mode not in ("session", "value"):
+            raise ValueError(taint_mode)
         self.policy = policy or Policy()
         self.log = log or ReceiptLog()
         self.queue = queue or ReviewQueue()
         self.use_detector = use_detector
         self.use_policy = use_policy
+        self.taint_mode = taint_mode
         self.tainted = False
+        self.untrusted_atoms: set[str] = set()
+        self.trusted_atoms: set[str] = set()
+
+    def register_task(self, text: str) -> None:
+        """Values typed by the user are trusted provenance."""
+        self.trusted_atoms |= atoms(text)
 
     def ingest(self, text: str, source: str, trusted: bool = False) -> Ingest:
         """Scan content before the model sees it."""
@@ -38,6 +51,7 @@ class Gateway:
             self.log.append({"type": "ingest", "source": source, "action": "allow", "trusted": True})
             return Ingest("allow", text, 0.0)
         self.tainted = True  # structural: any untrusted read taints the session
+        self.untrusted_atoms |= atoms(text)  # independent of the detector verdict
         res = detector.scan(text) if self.use_detector else detector.ScanResult(0.0, "allow")
         rid = None
         if res.action == "review":
@@ -51,7 +65,7 @@ class Gateway:
 
     def authorize_tool(self, tool: str, args: dict, origin: str = "model") -> Decision:
         """origin='user' means the human typed the command directly (not tainted)."""
-        tainted = self.tainted and origin != "user"
+        tainted = self._is_tainted(tool, args, origin)
         if self.use_policy:
             d = self.policy.decide(tool, args, tainted)
         else:
@@ -63,6 +77,14 @@ class Gateway:
             "action": d.action, "reason": d.reason, "risk": d.risk, "review_id": d.review_id,
         })
         return d
+
+    def _is_tainted(self, tool: str, args: dict, origin: str) -> bool:
+        if origin == "user" or not self.tainted:
+            return False
+        if self.taint_mode == "value" and self.policy.tools.get(tool) == "high":
+            used = atoms(" ".join(str(v) for v in args.values()))
+            return bool((used & self.untrusted_atoms) - self.trusted_atoms)
+        return True
 
     def resolve(self, review_id: str, approve: bool, reviewer: str, note: str = "") -> dict:
         item = self.queue.decide(review_id, approve, reviewer, note)

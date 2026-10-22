@@ -20,6 +20,16 @@
       "attack_success_rate": 0.0,
       "attacks_succeeded": 0,
       "human_reviews_triggered": 10
+    },
+    "full_value_taint": {
+      "attack_success_rate": 0.0,
+      "attacks_succeeded": 0,
+      "human_reviews_triggered": 10
+    },
+    "policy_value_taint": {
+      "attack_success_rate": 0.0,
+      "attacks_succeeded": 0,
+      "human_reviews_triggered": 40
     }
   },
   "by_encoder": {
@@ -45,6 +55,20 @@
       "html_comment": 0.0
     },
     "full": {
+      "plain": 0.0,
+      "zero_width": 0.0,
+      "homoglyph": 0.0,
+      "base64": 0.0,
+      "html_comment": 0.0
+    },
+    "full_value_taint": {
+      "plain": 0.0,
+      "zero_width": 0.0,
+      "homoglyph": 0.0,
+      "base64": 0.0,
+      "html_comment": 0.0
+    },
+    "policy_value_taint": {
       "plain": 0.0,
       "zero_width": 0.0,
       "homoglyph": 0.0,

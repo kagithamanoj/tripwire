@@ -11,6 +11,11 @@ Scored against the handbook rubric. Estimated total **~68/100**. Not a predictio
 | Technical Depth | 15 | 11 | CI (added), IaC for AWS, KMS signer, DynamoDB adapters, deployed URL |
 | Presentation & Demo | 10 | 6 | Slide deck, rehearsed 3-minute demo, polished web UI |
 
+## Update (v0.2)
+Added: value-level taint (7/8 legit tasks vs 1/8 with session taint, same 3/3 attacks stopped), utility benchmark,
+Bedrock agent adapter (unit-tested with a fake client; **not run against the real service**), 29 tests.
+Still open: real-LLM results, user interviews, AWS deployment, deck. Estimated total now ~72/100.
+
 ## Honest critique
 1. **Circular evaluation.** Attacks, defence and the naive agent were written by the same author. Results are a regression benchmark, not independent evidence.
 2. **0% attack success is partly structural.** Coarse taint blocks all risky tool calls after any untrusted read. The meaningful number is the **utility cost**, which is under-measured (8 benign documents).

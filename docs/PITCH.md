@@ -7,7 +7,8 @@
 4. **Live demo part 1.** Attack succeeds unprotected; blocked with Tripwire (Presentation 10%).
 5. **Live demo part 2.** The polite paraphrase the detector misses; structural policy still stops it. Show honesty.
 6. **Architecture (Execution 15%).** Two independent layers + signed receipts.
-7. **Arena results (Track Execution 25%).** 160 variants x 4 defences: 100% -> 6.2% -> 0%; human-review cost shown.
+7. **Arena + utility (Track Execution 25%).** 160 variants x defences: 100% -> 6.2% -> 0% attack success. The honest twist: session-wide
+   taint stops the agent doing 7 of 8 legit tasks; value-level taint restores 7/8 with the same attacks stopped.
 8. **Trust, safety, governance (15%).** Review queue fail-closed, threat model, system card, tamper-evident receipts, compliance alignment.
 9. **Innovation (15%).** Taint-based agency control + self-attacking arena + verifiable receipts, in one small dependency-free core.
 10. **Limits and roadmap.** Self-authored attack set, coarse taint, origin trust. Next: Bedrock attacker, KMS signing, fine-grained taint. Ask.

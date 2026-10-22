@@ -26,6 +26,10 @@ Optional (planned): Amazon Bedrock model as an independent attacker for held-out
 | Detector false-positive rate | 12.5% (1/8) | B08 security-training text |
 | Benign calls needing a human | 1 of 8 benign docs | B07 forward to internal address |
 
+Utility (`python -m tripwire utility`, 8 tasks incl. 3 with an injected document): legitimate tasks completed without a human:
+none 8/8, session taint 1/8, **value taint 7/8**; attacks stopped in mixed tasks 3/3 for both taint modes.
+Value-taint mode (`taint_mode="value"`) is opt-in; default is the safer session mode. Its blind spot is threat T15.
+
 Caveats: self-authored attack set; simulated agent; small corpus. Treat as a regression benchmark, not a security guarantee.
 
 ## Human oversight

@@ -1,0 +1,2 @@
+# Optional: only needed for the Bedrock agent and AWS deployment. The core has no dependencies.
+boto3>=1.35

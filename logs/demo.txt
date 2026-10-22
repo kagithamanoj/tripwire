@@ -13,8 +13,8 @@ WITH TRIPWIRE agent executed:
   -> pending human reviews: 0 
 
 SIGNED RECEIPTS:
-  #0 ingest  block   document  sig=672af9516134
-  #1 tool    allow   summarize  sig=3b461852f4e0
+  #0 ingest  block   document  sig=1e4b35891f4f
+  #1 tool    allow   summarize  sig=3e5dfae7df9c
   chain verifies: True
   after tampering with receipt #0: (False, 0)
 ========================================================================
@@ -32,8 +32,8 @@ WITH TRIPWIRE agent executed:
   -> pending human reviews: 0 
 
 SIGNED RECEIPTS:
-  #0 ingest  allow   document  sig=c5a8fafac158
-  #1 tool    allow   summarize  sig=714f82c77ec4
-  #2 tool    block   send_email  sig=c098b184902e
+  #0 ingest  allow   document  sig=766da53e2df5
+  #1 tool    allow   summarize  sig=9e82945f7226
+  #2 tool    block   send_email  sig=7f6c1ae05832
   chain verifies: True
   after tampering with receipt #0: (False, 0)

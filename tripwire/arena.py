@@ -18,6 +18,8 @@ CONFIGS = {
     "detector_only": dict(use_detector=True, use_policy=False),
     "policy_only": dict(use_detector=False, use_policy=True),
     "full": dict(use_detector=True, use_policy=True),
+    "full_value_taint": dict(use_detector=True, use_policy=True, taint_mode="value"),
+    "policy_value_taint": dict(use_detector=False, use_policy=True, taint_mode="value"),
 }
 
 PAYLOADS = [

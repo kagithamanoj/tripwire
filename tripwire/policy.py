@@ -73,6 +73,26 @@ def _host_of(value: str) -> str:
     return (urlparse(value).hostname or "").lower()
 
 
+_ATOM = re.compile(r"[\w.+\-@:/]*[@/:\d][\w.+\-@:/]*")
+
+
+def atoms(text: str) -> set[str]:
+    """Identifier-like values (emails, URLs, paths, account ids) used for provenance tracking.
+
+    Plain words are ignored on purpose: tracking them would taint everything.
+    """
+    from .normalize import decode_embedded, normalize
+
+    clean, _ = normalize(text)
+    found = set()
+    for chunk in [clean] + [normalize(d)[0] for d in decode_embedded(clean)]:
+        for m in _ATOM.findall(chunk):
+            m = m.strip(".,;:)").lower()
+            if len(m) >= 4:
+                found.add(m)
+    return found
+
+
 def redact(text: str) -> tuple[str, int]:
     count = 0
     for name, rx in SECRET_PATTERNS:

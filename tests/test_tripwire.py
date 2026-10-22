@@ -164,5 +164,60 @@ class TestEndToEnd(unittest.TestCase):
         self.assertGreater(r["detector_only"]["attack_success_rate"], 0.0)  # detector alone is not enough
 
 
+class TestValueTaint(unittest.TestCase):
+    TASK = "Email the summary to boss@acme.example."
+
+    def gw(self, mode="value"):
+        g = Gateway(taint_mode=mode)
+        g.register_task(self.TASK)
+        g.ingest("Notes. Contact attacker@evil.example or see /data/finance.xlsx", "web")
+        return g
+
+    def test_user_supplied_recipient_allowed_in_value_mode(self):
+        self.assertEqual(self.gw().authorize_tool("send_email", {"to": "boss@acme.example"}).action, "allow")
+        self.assertEqual(self.gw("session").authorize_tool("send_email", {"to": "boss@acme.example"}).action, "review")
+
+    def test_value_copied_from_untrusted_content_is_tainted(self):
+        self.assertEqual(self.gw().authorize_tool("send_email", {"to": "attacker@evil.example"}).action, "block")
+
+    def test_critical_tools_always_use_session_taint(self):
+        d = self.gw().authorize_tool("delete_file", {"path": "/tmp/unrelated.txt"})
+        self.assertEqual(d.action, "block")
+
+    def test_known_gap_value_not_copied_from_document(self):
+        # Documented limitation: a high-risk call whose arguments never appeared in untrusted
+        # content is not value-tainted. The egress allowlist is the remaining control.
+        g = self.gw()
+        self.assertEqual(g.authorize_tool("send_email", {"to": "ceo@acme.example"}).action, "allow")
+        self.assertEqual(g.authorize_tool("send_email", {"to": "x@elsewhere.example"}).action, "review")
+
+    def test_atoms_ignore_plain_words(self):
+        from tripwire.policy import atoms
+        self.assertEqual(atoms("please summarize the report"), set())
+        self.assertIn("a@b.example", atoms("mail A@B.example."))
+
+
+class TestBedrockAdapter(unittest.TestCase):
+    def test_parses_tool_use_blocks_with_fake_client(self):
+        from tripwire.llm_agent import BedrockAgent
+
+        class Fake:
+            def converse(self, **kw):
+                assert kw["modelId"] == "m" and kw["toolConfig"]["tools"]
+                return {"output": {"message": {"content": [
+                    {"text": "ok"},
+                    {"toolUse": {"name": "send_email", "input": {"to": "a@evil.example", "body": "x"}}}]}}}
+
+        calls = BedrockAgent(client=Fake(), model_id="m").plan("t", ["d"])
+        self.assertEqual([(c.tool, c.origin) for c in calls], [("send_email", "model")])
+
+    def test_requires_model_id(self):
+        import os
+        from tripwire.llm_agent import BedrockAgent
+        os.environ.pop("TRIPWIRE_MODEL_ID", None)
+        with self.assertRaises(RuntimeError):
+            BedrockAgent(client=object())
+
+
 if __name__ == "__main__":
     unittest.main()

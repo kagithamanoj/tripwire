@@ -1,3 +1,5 @@
+test_parses_tool_use_blocks_with_fake_client (test_tripwire.TestBedrockAdapter.test_parses_tool_use_blocks_with_fake_client) ... ok
+test_requires_model_id (test_tripwire.TestBedrockAdapter.test_requires_model_id) ... ok
 test_benign_only_known_hard_negative_flagged (test_tripwire.TestDetector.test_benign_only_known_hard_negative_flagged) ... ok
 test_known_evasions_are_documented_misses (test_tripwire.TestDetector.test_known_evasions_are_documented_misses) ... ok
 test_obfuscated_attacks_detected (test_tripwire.TestDetector.test_obfuscated_attacks_detected) ... ok
@@ -20,8 +22,13 @@ test_valid_chain (test_tripwire.TestReceipts.test_valid_chain) ... ok
 test_wrong_key_rejected (test_tripwire.TestReceipts.test_wrong_key_rejected) ... ok
 test_double_decision_rejected (test_tripwire.TestReviewQueue.test_double_decision_rejected) ... ok
 test_expiry_fails_closed (test_tripwire.TestReviewQueue.test_expiry_fails_closed) ... ok
+test_atoms_ignore_plain_words (test_tripwire.TestValueTaint.test_atoms_ignore_plain_words) ... ok
+test_critical_tools_always_use_session_taint (test_tripwire.TestValueTaint.test_critical_tools_always_use_session_taint) ... ok
+test_known_gap_value_not_copied_from_document (test_tripwire.TestValueTaint.test_known_gap_value_not_copied_from_document) ... ok
+test_user_supplied_recipient_allowed_in_value_mode (test_tripwire.TestValueTaint.test_user_supplied_recipient_allowed_in_value_mode) ... ok
+test_value_copied_from_untrusted_content_is_tainted (test_tripwire.TestValueTaint.test_value_copied_from_untrusted_content_is_tainted) ... ok
 
 ----------------------------------------------------------------------
-Ran 22 tests in 0.022s
+Ran 29 tests in 0.062s
 
 OK

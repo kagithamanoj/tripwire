@@ -31,6 +31,8 @@ have access to the gateway host or signing key. (Insider / host compromise is ou
 | T13 | Denial of service via huge input | 100 MB document | Demo server caps body at 64 KB; none in library | server code | Medium: add size limits at gateway for production |
 | T14 | Demo server abuse | public endpoint | None in demo (no auth) | `server.py` docstring | Medium: put WAF + auth in front on AWS |
 
+| T15 | Value-taint blind spot | Injection makes the model call a high-risk tool with arguments that never appear in the document (e.g. infers an internal address) | Egress allowlist; critical tools always use session taint; `taint_mode="session"` available | `test_known_gap_value_not_copied_from_document` | **Medium**: value mode trades some safety for utility; choose per deployment |
+
 ## Fail-closed behaviours
 Unknown tools denied. Unreviewed items expire to deny. Critical actions in tainted context are blocked, not queued.
 

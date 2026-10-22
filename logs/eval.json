@@ -17,6 +17,8 @@
     "none": 1.0,
     "detector_only": 0.2,
     "policy_only": 0.0,
-    "full": 0.0
+    "full": 0.0,
+    "full_value_taint": 0.0,
+    "policy_value_taint": 0.0
   }
 }
