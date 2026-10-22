@@ -53,6 +53,13 @@ def handle(method: str, path: str, body: bytes = b"", log_factory=ReceiptLog, se
             return _json(_cached("arena", arena.run_arena))
         if path == "/api/utility":
             return _json(_cached("utility", run_utility))
+        if path == "/api/samples":
+            from . import corpus
+            return _json({
+                "attacks": [{"id": a["id"], "kind": a["kind"], "text": a["text"], "uses_tool": bool(a["harmful"])}
+                            for a in corpus.ATTACKS],
+                "benign": [{"id": b["id"], "text": b["text"]} for b in corpus.BENIGN],
+            })
         if path.startswith("/api/session/") and session_loader:
             receipts, signer = session_loader(path.rsplit("/", 1)[1])
             if not receipts:
@@ -72,6 +79,7 @@ def handle(method: str, path: str, body: bytes = b"", log_factory=ReceiptLog, se
             req = json.loads(body)
             text = str(req["text"])[:MAX_TEXT]
             task = str(req.get("task", "Summarize the document."))[:500]
+            tamper = req.get("tamper") is True
             mode = req.get("taint_mode", "session")
             if mode not in ("session", "value"):
                 raise ValueError(mode)
@@ -83,6 +91,15 @@ def handle(method: str, path: str, body: bytes = b"", log_factory=ReceiptLog, se
         protected, stats = run_scenario(text, task, gateway=gw)
         res = scan(text)
         ok, bad = gw.log.verify()
+        shown = [{"seq": r["seq"], "event": dict(r["event"]), "sig": r["sig"][:16]} for r in gw.log.receipts]
+        tamper_check = None
+        if tamper and gw.log.receipts:  # edit the in-memory copy only; nothing stored is touched
+            first = gw.log.receipts[0]["event"]
+            before = first.get("action")
+            first["action"] = "allow" if before != "allow" else "block"
+            t_ok, t_bad = gw.log.verify()
+            tamper_check = {"verified": t_ok, "first_bad_seq": t_bad, "edited_seq": 0,
+                            "field": "action", "from": before, "to": first["action"]}
         return _json({
             "detector": {"action": res.action, "score": res.score, "rules": [f.rule for f in res.findings]},
             "unprotected_executed": unprotected.executed,
@@ -90,7 +107,7 @@ def handle(method: str, path: str, body: bytes = b"", log_factory=ReceiptLog, se
             "held_for_human": stats["reviews"], "blocked": stats["blocked"],
             "review_ids": [i["id"] for i in gw.queue.pending()],
             "session": gw.log.session_id, "chain_verified": ok,
-            "receipts": [{"seq": r["seq"], "event": r["event"], "sig": r["sig"][:16]} for r in gw.log.receipts],
+            "receipts": shown, "tamper_check": tamper_check,
         })
     return _json({"error": "not found"}, 404)
 

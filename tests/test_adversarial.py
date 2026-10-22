@@ -103,6 +103,29 @@ class TestRobustness(unittest.TestCase):
             Gateway().filter_output(s)
 
 
+class TestDemoApi(unittest.TestCase):
+    def test_samples_endpoint_lists_corpus(self):
+        from tripwire import api
+        code, body, _ = api.handle("GET", "/api/samples")
+        data = json.loads(body)
+        self.assertEqual(code, 200)
+        self.assertEqual(len(data["attacks"]), 16)
+        self.assertTrue(all({"id", "kind", "text", "uses_tool"} <= set(a) for a in data["attacks"]))
+        self.assertGreaterEqual(len(data["benign"]), 8)
+
+    def test_tamper_flag_breaks_verification_without_touching_the_original(self):
+        from tripwire import api
+        body = json.dumps({"text": "plain notes", "tamper": True}).encode()
+        _, payload, _ = api.handle("POST", "/api/try", body)
+        res = json.loads(payload)
+        self.assertTrue(res["chain_verified"])
+        self.assertEqual(res["tamper_check"], {"verified": False, "first_bad_seq": 0, "edited_seq": 0,
+                                               "field": "action", "from": "allow", "to": "block"})
+        self.assertEqual(res["receipts"][0]["event"]["action"], "allow")  # the table shows the original, not the edit
+        _, payload, _ = api.handle("POST", "/api/try", json.dumps({"text": "plain notes"}).encode())
+        self.assertIsNone(json.loads(payload)["tamper_check"])
+
+
 class TestLambdaHardening(unittest.TestCase):
     def test_bad_event_shapes(self):
         self.assertEqual(handler({})["statusCode"], 400)
