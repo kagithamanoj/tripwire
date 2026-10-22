@@ -45,8 +45,9 @@ def _demo_one(attack: dict) -> None:
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="tripwire")
-    p.add_argument("command", choices=["demo", "eval", "arena", "utility", "serve"])
+    p.add_argument("command", choices=["demo", "eval", "arena", "utility", "independent", "serve"])
     p.add_argument("--port", type=int, default=8080)
+    p.add_argument("--set", default="data/independent_set.json", help="attack set for `independent`")
     a = p.parse_args(argv)
     if a.command == "demo":
         demo()
@@ -54,6 +55,9 @@ def main(argv=None) -> int:
         print(json.dumps(arena.run_seed_eval(), indent=2))
     elif a.command == "arena":
         print(json.dumps(arena.run_arena(), indent=2))
+    elif a.command == "independent":
+        from .independent import evaluate
+        print(json.dumps(evaluate(a.set), indent=2))
     elif a.command == "utility":
         from .utility import run_utility
         print(json.dumps(run_utility(), indent=2))

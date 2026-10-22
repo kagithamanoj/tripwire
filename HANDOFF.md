@@ -29,7 +29,11 @@ Two placeholders to fill before presenting: **slide 3** (3-5 interview quotes; t
 - All temporary resources were deleted and verified (0 EC2 instances, 0 RDS, 0 stray secrets). Only stack `tripwire-demo` remains.
 - To add an email alert: Billing -> Budgets -> `tripwire-monthly-20usd` -> Edit -> notifications.
 
-## Bedrock status
+## Bedrock status: DENIED (2026-10-22, 7:46 AM CT)
+AWS Support replied that the quota increase for model access is declined: the account must first show usage of its current capacity,
+or wait for the next billing cycle and re-request (or go through AWS Sales). It cannot be resolved before the 5 PM CT code freeze.
+**Use a fallback provider for the real-model eval, or ship the honest line:** "agent adapter implemented; AWS declined the quota."
+Older notes below are kept for history.
 - Account Bedrock token quota is **0** for Claude and Amazon Nova (every call returns throttling / "not available for this account").
 - Manoj submitted 3 service-quota cases on 2026-10-22 (Sonnet, Haiku, Opus), status "Work in progress". Check Support -> Cases.
 - Separately, Anthropic models need the **use case details form** submitted in the Bedrock console (Claude 4.x said so). Only Manoj can do it.
