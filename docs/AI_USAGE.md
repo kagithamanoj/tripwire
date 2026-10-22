@@ -33,4 +33,4 @@ We declare that the above is a complete and accurate account of generative-AI an
 | Name | GitHub | Signature | Date |
 |---|---|---|---|
 | Manoj Kagitha | @kagithamanoj | Manoj Kagitha (typed signature) | 2026-10-22 |
-| Meghana Alaparthy | @meghana-alaparthy | (awaiting Meghana's signature) | |
+| Meghana Alaparthy | @meghana-alaparthy | Meghana Alaparthy (typed signature) | 2026-10-22 |
