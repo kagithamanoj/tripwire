@@ -21,11 +21,21 @@ The deployed product contains **no model calls**; the live demo is deterministic
 **Data sent to the AI providers** is described in `docs/DATA_AND_PRIVACY.md`.
 
 ## What the humans did
-- Problem selection and track: Manoj chose the problem (a firewall for tool-using agents) and the SECURE track; Meghana Alaparthy is the second team member.
-- Direction: Manoj directed the build session by session (scope, the red-team pass on our own firewall, the AWS deployment, the decision to run the real-model evaluation through the Anthropic API when AWS declined the Bedrock quota) and reviewed all output before it was pushed.
-- Accounts and approvals: Manoj owns the AWS account work (deployment approvals, the monthly budget alarm, three Bedrock service-quota cases filed Oct 22, teardown plan), the Anthropic account and API key, and the GitHub repositories.
-- Verification: the metrics in the README and pitch come from running the code (70 tests, eval, arena, utility benchmark, real-model run, live demo), not from model claims.
-- Meghana's own additions to this section: to be appended by her before submission.
+
+**Manoj Kagitha**
+- Decided to build this project and chose the SECURE track. The idea (a firewall for tool-using agents) was proposed by Claude from the handbook; Manoj chose it, pushed for a stronger version, and rejected weaker alternatives.
+- Directed the build session by session: set the scope, approved or declined each action (deployments, pushes, history changes), and reviewed output before it was pushed. Corrected course several times, for example on commit attribution, which notes stay in the repo, and the declaration wording.
+- Asked Claude to attack its own firewall and to score the project honestly, then directed the fixes that followed (stronger detector, five bypass fixes, the provenance fix in the policy engine). Claude carried out the red-team work.
+- Ran the real-model evaluation himself, in his own terminal with his own Anthropic API key, and reported the results back; he chose the Anthropic API when AWS declined the Bedrock quota.
+- Owned the accounts and outside actions: set up the AWS account, owns the Anthropic account and API key, signed in to AWS, filed three Bedrock quota cases, submitted the Anthropic use-case form and Marketplace subscriptions, approved the AWS deployment, and revoked the API key after the run.
+- Asked the organizers and judges about provider restrictions, the declaration form and the live-demo requirement, and acted on their answers.
+- Approved the pushes to the repositories, read this declaration, and signed it.
+
+**Meghana Alaparthy**
+- Second team member. Read and agreed to this declaration before it was signed, and has collaborator access to the repository.
+- Planned, not yet done at the time of writing: short interviews with people who build agents, to validate the problem. Meghana should confirm or edit her own contributions here before the declaration is submitted.
+
+**What Claude did, for comparison:** wrote the code, tests, infrastructure template, scripts and documents; proposed the design rules (no model in the enforcement path, policy decides, fail closed, human approval for risky or external actions); and ran the red-team analysis, the arena and the test runs when asked. Verification came from running the code: 70 tests, the evaluation, the 160-variant arena, the utility benchmark, the secret scan, the real-model run and the live AWS demo.
 
 ## Declaration
 We declare that the above is a complete and accurate account of generative-AI and automated coding tools used in this project.
