@@ -20,6 +20,15 @@ Last updated: 2026-10-22. Repo: github.com/kagithamanoj/tripwire (private). Fold
 - Separately, Anthropic models need the **use case details form** submitted in the Bedrock console (Claude 4.x said so). Only Manoj can do it.
 - Once approved: try the playground (also earns the credit), then run `scripts/live_eval.py`.
 
+## Decision: fallback if Bedrock is not approved by 2026-10-23 10:00
+Switch the **real-model evaluation** (not the whole project) to another provider. The AWS demo (Lambda/DynamoDB/KMS) stays as is.
+Options, easiest first:
+1. **Google Cloud (Vertex AI)**: new accounts get free-trial credit; Gemini models work without a quota request. Needs a small adapter
+   like `tripwire/llm_agent.py` (function calling instead of Bedrock `toolUse`). Claude on Vertex needs Model Garden enablement and has quotas too.
+2. **Anthropic API directly** with your own API key: no cloud quota, pay per token (cents). Same adapter shape.
+Keep the gateway unchanged: any agent that returns `Call(tool, args, origin)` plugs in via `run_scenario(..., agent=...)`.
+Whichever provider is used, report it honestly in `SYSTEM_CARD.md` and `AI_USAGE.md`.
+
 ## Do these first tomorrow (in order)
 1. **Renew AWS login** (it lasts ~12h): `aws login --region us-east-2 --profile tripwire`
 2. **Check the budget alarm exists** (Billing -> Budgets, $20) and look at Credits to see what they cover (`docs/COST.md`).
