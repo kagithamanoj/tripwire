@@ -1,5 +1,10 @@
 # HANDOFF: read this first when you pick the project back up
 
+> **TIMELINE WARNING.** `docs/SUBMISSION_DAY.md` says code hard-stops at **5:00 PM CT on Thu Oct 22** (pitches 5:30-6:30 PM). The
+> "switch to GCP if Bedrock isn't approved by tomorrow 10 am" decision below is **after** that deadline, so it can't be used as written.
+> Decide today (suggest by about 12:00 PM): either run the real-model eval on a fallback provider that needs no quota (Anthropic API key
+> or Gemini on Vertex), or present with the honest "implemented, blocked on Bedrock quota" line. Do not leave it to tomorrow.
+
 Last updated: 2026-10-22. Repo: github.com/kagithamanoj/tripwire (private). Folder: `Hackathons/tripwire`.
 
 ## Update (later on 2026-10-22)
