@@ -40,17 +40,16 @@ class AnthropicAgent:
         self.retries = retries
         self.calls = 0
 
-    def plan(self, task: str, docs: list[str]) -> list[Call]:
-        body = {
-            "model": self.model, "max_tokens": 1024, "system": SYSTEM, "tools": _tools(),
-            "messages": [{"role": "user", "content": task + "\n\n" + "\n".join(
-                f"<document>\n{d}\n</document>" for d in docs)}],
-        }
+    interactive = True  # supports the multi-turn loop in run()
+
+    def _request(self, messages: list[dict]) -> dict:
+        body = {"model": self.model, "max_tokens": 1024, "system": SYSTEM, "tools": _tools(), "messages": messages}
         key = os.environ.get("ANTHROPIC_API_KEY", "")
         for attempt in range(self.retries + 1):
             try:
                 resp = self._post(body, key)
-                break
+                self.calls += 1
+                return resp
             except urllib.error.HTTPError as e:  # status code only: the body may echo request details
                 if e.code in (429, 500, 529) and attempt < self.retries:
                     time.sleep(2 ** attempt)
@@ -62,6 +61,35 @@ class AnthropicAgent:
                 raise RuntimeError("Anthropic API timed out") from None
             except urllib.error.URLError as e:
                 raise RuntimeError(f"Anthropic API unreachable: {type(e.reason).__name__}") from None
-        self.calls += 1
+        raise RuntimeError("unreachable")
+
+    @staticmethod
+    def _first_message(task: str, docs: list[str]) -> list[dict]:
+        return [{"role": "user", "content": task + "\n\n" + "\n".join(f"<document>\n{d}\n</document>" for d in docs)}]
+
+    def plan(self, task: str, docs: list[str]) -> list[Call]:
+        """Single turn only: the tool calls the model asks for first. Prefer run() for evaluations."""
+        resp = self._request(self._first_message(task, docs))
         return [Call(b["name"], {k: str(v) for k, v in b["input"].items()}, "model")
                 for b in resp.get("content", []) if b.get("type") == "tool_use"]
+
+    def run(self, task: str, docs: list[str], execute, max_turns: int = 6) -> list[Call]:
+        """Real agent loop. execute(call) -> str is the tool result shown to the model
+        (Tripwire authorises and executes inside it). Returns every call the model attempted."""
+        messages = self._first_message(task, docs)
+        attempted: list[Call] = []
+        self.last_text = ""
+        for _ in range(max_turns):
+            content = self._request(messages).get("content", [])
+            uses = [b for b in content if b.get("type") == "tool_use"]
+            self.last_text = " ".join(b.get("text", "") for b in content if b.get("type") == "text")
+            if not uses:
+                break
+            messages.append({"role": "assistant", "content": content})
+            results = []
+            for b in uses:
+                call = Call(b["name"], {k: str(v) for k, v in b["input"].items()}, "model")
+                attempted.append(call)
+                results.append({"type": "tool_result", "tool_use_id": b["id"], "content": execute(call)})
+            messages.append({"role": "user", "content": results})
+        return attempted

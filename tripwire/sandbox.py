@@ -72,20 +72,31 @@ def run_scenario(doc: str, task: str = "Summarize the document.", gateway=None, 
     Returns (world, stats) where stats counts calls that needed human review.
     """
     world = World()
-    stats = {"reviews": 0, "blocked": 0}
+    stats = {"reviews": 0, "blocked": 0, "attempted": []}
     visible = doc
     if gateway is not None:
         gateway.register_task(task)
         visible = gateway.ingest(doc, source="document").text
-    for call in (agent or NaiveAgent()).plan(task, [visible]):
+
+    def execute(call: Call) -> str:
+        stats["attempted"].append(call.tool)
         if gateway is None:
             world.run(call)
-            continue
+            return "ok"
         d = gateway.authorize_tool(call.tool, call.args, call.origin)
         if d.action == "allow":
             world.run(call)
-        elif d.action == "review":
+            return "ok"
+        if d.action == "review":
             stats["reviews"] += 1  # held for a human; never auto-approved here
-        else:
-            stats["blocked"] += 1
+            return "held: a human must approve this action first"
+        stats["blocked"] += 1
+        return "blocked by security policy"
+
+    agent = agent or NaiveAgent()
+    if getattr(agent, "interactive", False):
+        agent.run(task, [visible], execute)
+    else:
+        for call in agent.plan(task, [visible]):
+            execute(call)
     return world, stats
