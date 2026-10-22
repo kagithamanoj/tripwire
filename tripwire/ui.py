@@ -10,10 +10,10 @@ PAGE = r"""<!doctype html>
 <title>Tripwire</title>
 <style>
 :root{--bg:#f4f6fa;--surface:#ffffff;--surface2:#edf0f6;--fg:#121826;--mut:#566074;--line:#d6ddea;
---acc:#2f5bd8;--accfg:#ffffff;--bad:#b42318;--badbg:#fdecea;--ok:#0f7a47;--okbg:#e5f4ec;--warn:#8a5a00;--warnbg:#fff2d2;
+--acc:#2f5bd8;--accfg:#ffffff;--okfg:#ffffff;--bad:#b42318;--badbg:#fdecea;--ok:#0f7a47;--okbg:#e5f4ec;--warn:#8a5a00;--warnbg:#fff2d2;
 --shadow:0 1px 2px rgba(18,24,38,.06),0 6px 20px rgba(18,24,38,.06);--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 @media (prefers-color-scheme:dark){:root{--bg:#0c111e;--surface:#141b2d;--surface2:#1c2540;--fg:#e8ecf4;--mut:#a4afc5;--line:#2a3552;
---acc:#8aa5ff;--accfg:#0c111e;--bad:#ff8f86;--badbg:#3a1d21;--ok:#52d99b;--okbg:#122f20;--warn:#f2c24f;--warnbg:#352b10;--shadow:none}}
+--acc:#8aa5ff;--accfg:#0c111e;--okfg:#0c111e;--bad:#ff8f86;--badbg:#3a1d21;--ok:#52d99b;--okbg:#122f20;--warn:#f2c24f;--warnbg:#352b10;--shadow:none}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px 56px}
@@ -36,6 +36,8 @@ textarea:focus,input:focus,select:focus,button:focus-visible{outline:3px solid v
 button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--fg);padding:9px 14px}
 button:hover{border-color:var(--acc)}button:disabled{opacity:.55;cursor:progress}
 button.primary{background:var(--acc);color:var(--accfg);border-color:var(--acc);font-weight:600;padding:10px 20px}
+button.btn-ok{background:var(--ok);color:var(--okfg);border-color:var(--ok);font-weight:650;padding:10px 22px}
+button.btn-no{color:var(--bad);border-color:var(--bad);background:var(--surface)}
 button.link{background:none;border:none;color:var(--acc);padding:0;text-decoration:underline}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg label{padding:8px 14px;cursor:pointer;font-size:14px;background:var(--surface2)}
@@ -238,19 +240,29 @@ $('run').addEventListener('click',function(){run(false)});
 $('tamper').addEventListener('click',function(){run(true)});
 $('t').addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();run(false)}});
 
+var outcome='';
 function reviewRow(it){var d=el('div',null,'pending-item');
  d.appendChild(el('div',(it.payload.tool||it.kind)+'  '+fmtArgs(it.payload.args||{excerpt:it.payload.excerpt}),'call risky'));
  d.appendChild(el('p','Why: '+it.reason,'note'));var a=el('div',null,'acts');
- [['Approve',true],['Deny',false]].forEach(function(x){var bt=el('button',x[0]);bt.type='button';
-  bt.addEventListener('click',function(){bt.disabled=true;
+ [['Approve this action',true],['Deny it',false]].forEach(function(x){var bt=el('button',x[0],x[1]?'btn-ok':'btn-no');bt.type='button';
+  bt.addEventListener('click',function(){
+   a.querySelectorAll('button').forEach(function(b){b.disabled=true});
    fetch('/api/reviews/'+encodeURIComponent(it.id),{method:'POST',headers:{'x-approver-token':$('tok').value,'content-type':'application/json'},
-    body:JSON.stringify({approve:x[1],reviewer:'demo-ui'})}).then(function(){loadReviews()})});a.appendChild(bt)});
+    body:JSON.stringify({approve:x[1],reviewer:'demo-ui'})})
+   .then(function(r){return r.json().then(function(j){return {ok:r.ok,status:r.status,j:j}})})
+   .then(function(res){
+    if(res.ok)outcome=(res.j.status==='approved'?'✔ Approved':'✘ Denied')+' · decision signed into the receipt chain';
+    else if(res.status===409)outcome='Too late: this action was already '+(res.j.status||'decided')+' (undecided items are denied after 15 minutes).';
+    else if(res.status===401)outcome='Wrong or missing token.';
+    else outcome='Could not record the decision.';
+    say(outcome);loadReviews()})
+   .catch(function(){outcome='Could not reach the service.';loadReviews()})});a.appendChild(bt)});
  d.appendChild(a);return d}
 function loadReviews(){var box=$('rv');clear(box);$('apprmsg').textContent='Loading…';
  fetch('/api/reviews',{headers:{'x-approver-token':$('tok').value}}).then(function(r){
   if(r.status===401){$('apprmsg').textContent='Wrong or missing token.';return null}
   if(!r.ok){$('apprmsg').textContent='Approvals are not enabled on this deployment.';return null}return r.json()})
- .then(function(j){if(!j)return;$('apprmsg').textContent=j.pending.length?j.pending.length+' pending':'Nothing pending.';
+ .then(function(j){if(!j)return;$('apprmsg').textContent=(outcome?outcome+'  ·  ':'')+(j.pending.length?j.pending.length+' pending':'Nothing pending.');outcome='';
   j.pending.forEach(function(it){box.appendChild(reviewRow(it))})}).catch(function(){$('apprmsg').textContent='Could not reach the service.'})}
 $('load').addEventListener('click',loadReviews);
 
