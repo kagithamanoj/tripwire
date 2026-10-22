@@ -43,7 +43,7 @@ No dependencies beyond Python 3.11+.
 
 ## What is real vs simulated (be honest with judges)
 Real: detector, policy, receipts, review queue, arena, tests. Simulated: the "agent" is a scripted naive stand-in;
-tools only write to an in-memory record. Next step is wrapping a real LLM agent (Bedrock) behind the same gateway.
+tools only write to an in-memory record. A real-model run (Claude Haiku 5.5 via the Anthropic API) is in docs/REAL_MODEL_EVAL.md.
 
 ## Division of work (suggested)
 - Manoj: gateway/policy hardening, AWS deployment, demo.

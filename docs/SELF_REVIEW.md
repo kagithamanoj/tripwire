@@ -26,11 +26,15 @@ Technical Depth 13/15, Presentation 7/10 (deck done, not rehearsed). **About 75/
 What moves it most: 3-5 real user interviews (+5 to +7), real-model results (+2 to +3), a rehearsed demo (+1 to +2).
 Done this round: red-team of our own firewall (docs/RED_TEAM_REPORT.md), persistent signed human approvals on AWS, 60 tests, pitch deck.
 
+## Update (v0.5, real-model results)
+Real model (Claude Haiku 5.5): 9/20 attacks succeed without Tripwire, 0/20 with it; legitimate work 7/9 with value taint (0/9 with session taint).
+The real run also exposed two provenance bugs (fixed). Still open: user interviews, an independent attacker set, a rehearsed demo. About 77/100.
+
 ## Honest critique
 1. **Circular evaluation.** Attacks, defence and the naive agent were written by the same author. Results are a regression benchmark, not independent evidence.
 2. **0% attack success is partly structural.** Coarse taint blocks all risky tool calls after any untrusted read. The meaningful number is the **utility cost**, which is under-measured (8 benign documents).
 3. **Detector recall** on the post-build holdout set went 29.2% -> 100% with false positives 30% -> 0% after fixes; that set is now tuned against, so treat the after numbers as optimistic (see `docs/RED_TEAM_REPORT.md`).
-4. **Simulated agent and tools.** No real LLM, no real side effects.
+4. **Mostly simulated.** The arena uses a scripted agent; a real model was run on only 10 attacks and 9 harmless documents (docs/REAL_MODEL_EVAL.md). Tools never have real side effects.
 5. **Origin labelling is trusted** from the host app (threat T11).
 6. **Demo endpoint is public and unauthenticated** (deployed on AWS; see `DEPLOY_AWS.md` limits).
 7. **No user validation** of the problem.

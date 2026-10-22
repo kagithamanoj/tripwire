@@ -22,7 +22,7 @@ Session-wide taint is safe but nearly stops the agent working; value-level taint
 content and recovers almost all legitimate work. The one task still routed to a human sends to an external recipient, by design.
 
 *Self-authored attack set against a simulated naive agent. See `docs/THREAT_MODEL.md` for limits.
-A real-LLM run on Amazon Bedrock is implemented (`scripts/live_eval.py`) but not yet executed.*
+With a real model (Claude Haiku 5.5, two runs of the 10 attacks): 9 of 20 succeeded without Tripwire, 0 of 20 with it; legitimate work completed 7 of 9 times with value-level taint. Details and caveats: `docs/REAL_MODEL_EVAL.md`.*
 
 ## Quick start (Python 3.11+, no dependencies)
 ```bash
@@ -42,7 +42,7 @@ Start with [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md), then [ARCHITECTURE](d
 [SUBMISSION_CHECKLIST](docs/SUBMISSION_CHECKLIST.md), [PITCH](docs/PITCH.md), [AI_USAGE](docs/AI_USAGE.md).
 
 ## Technical inventory
-Python standard library only. No third-party packages, no ML models, no API keys. Optional future: Amazon Bedrock, KMS, DynamoDB.
+Python standard library only. No third-party packages, no ML models and no keys in the product. The optional real-model evaluation script calls the Anthropic API with a key you supply in your shell. AWS (Lambda, KMS, DynamoDB) is used for the live demo.
 
 ## Team
 Manoj Kagitha ([@kagithamanoj](https://github.com/kagithamanoj)), Meghana Alaparthy ([@meghana-alaparthy](https://github.com/meghana-alaparthy))

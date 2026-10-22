@@ -18,7 +18,7 @@ mentor check-ins 12:00-1:00 PM, **hard stop for code 5:00 PM**, judging and pitc
 ## During the day
 - [ ] 12:00-1:00 PM mentor check-in: bring the demo and one question (track confirmation: team-022 submits as SECURE).
 - [ ] 2:00-3:00 PM: Manoj records Day Two DevOps. Meghana covers the room; no code changes that need him.
-- [ ] Bedrock: if the quota cases move, Manoj files the Anthropic use-case form, then run `scripts/live_eval.py` and put real numbers in README / SYSTEM_CARD / deck slide 7. If not, the honest "implemented, blocked on quota" line stays.
+- [x] Real-model eval DONE via the Anthropic API (Bedrock quota was declined); see docs/REAL_MODEL_EVAL.md. (Old note:) Bedrock: if the quota cases move, Manoj files the Anthropic use-case form, then run `scripts/live_eval.py` and put real numbers in README / SYSTEM_CARD / deck slide 7. If not, the honest "implemented, blocked on quota" line stays.
 - [ ] Rehearse the 3-minute demo twice out loud (script in docs/PROJECT_GUIDE.md).
 
 ## By 4:00 PM (one hour before hard stop)

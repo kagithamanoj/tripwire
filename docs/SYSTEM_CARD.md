@@ -13,7 +13,7 @@ Replacing model-level safety training; protecting against a compromised gateway 
 
 ## Components and models
 No ML model is required. Detector is rule-based; policy is deterministic code. The only "agent" in this repo is a scripted naive test double.
-Optional (planned): Amazon Bedrock model as an independent attacker for held-out red-teaming.
+Evaluation only: Claude Haiku 5.5 (Anthropic API) acts as the agent under test in `scripts/live_eval.py`; see `docs/REAL_MODEL_EVAL.md`. Bedrock was attempted but AWS declined the quota.
 
 ## Measured performance (reproduce: `python -m tripwire eval`, `python -m tripwire arena`)
 | Metric | Result | Notes |
@@ -29,6 +29,8 @@ Optional (planned): Amazon Bedrock model as an independent attacker for held-out
 Utility (`python -m tripwire utility`, 8 tasks incl. 3 with an injected document): legitimate tasks completed without a human:
 none 8/8, session taint 1/8, **value taint 7/8**; attacks stopped in mixed tasks 3/3 for both taint modes.
 Value-taint mode (`taint_mode="value"`) is opt-in; default is the safer session mode. Its blind spot is threat T15.
+
+Real model (Haiku 5.5, 20 attack runs, 9 harmless documents): attacks succeeded 9/20 without Tripwire and 0/20 with it; legitimate email sent 9/9 without, 0/9 session taint, 7/9 value taint.
 
 Caveats: self-authored attack set; simulated agent; small corpus. Treat as a regression benchmark, not a security guarantee.
 

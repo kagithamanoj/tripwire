@@ -10,7 +10,7 @@
 Update this table honestly if you use any other GenAI or code-completion tool (Copilot, ChatGPT, Bedrock, image generators, etc.).
 
 ## Runtime AI
-The shipped system contains no LLM calls. (If Bedrock is added later, list model IDs and purpose here.)
+The shipped product contains no LLM calls. The evaluation script `scripts/live_eval.py` calls the Anthropic API (model `claude-haiku-5-5`) to act as the agent under test; it needs the operator's own API key from an environment variable and is not part of the deployed demo. Amazon Bedrock was attempted but AWS declined the quota, so it was not used.
 
 ## What the humans did
 - Problem selection and track: Manoj chose the problem (a firewall for tool-using agents) and the SECURE track; Meghana Alaparthy is the second team member.

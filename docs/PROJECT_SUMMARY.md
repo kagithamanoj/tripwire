@@ -25,16 +25,16 @@ Plus a **red-team arena** that attacks the defences with 160 mutated injections 
 | full, session taint | 0% | 1/8 | 3/3 |
 | full, value taint | 0% | 7/8 | 3/3 |
 Detector recall on the 16-attack seed set is 81.2% (misses 3, all paraphrases); false-positive rate 12.5% (1 of 8 benign, a security-training text).
-**Honest caveats:** self-written attacks, simulated agent, small corpus. Not independent evidence. Real-LLM results are pending (see HANDOFF).
+**Honest caveats:** self-written attacks, simulated agent, small corpus. Not independent evidence. Real-model results (Claude Haiku 5.5): 9 of 20 attacks succeeded without Tripwire, 0 of 20 with it; legitimate work 7 of 9 with value-level taint (`docs/REAL_MODEL_EVAL.md`); small sample, our own attacks.
 
 ## What is built
 - Python core, standard library only (no dependencies): detector, policy, gateway, receipts, review queue, arena, utility benchmark.
 - Local CLI + web UI (`python3 -m tripwire demo|eval|arena|utility|serve`).
 - AWS deployment (us-east-2): Lambda Function URL + DynamoDB + KMS via CloudFormation; live URL in `DEPLOY_AWS.md`.
 - Docker image, built and smoke-tested in GitHub Actions CI. 34 unit tests, secret scan, CI.
-- Bedrock real-LLM agent adapter + eval script (written, unit-tested with fakes, **not yet run live**).
+- Real-LLM agent adapters (Anthropic API, run live; Bedrock, blocked by AWS quota) and `scripts/live_eval.py`.
 - Docs: architecture, threat model (15 risks), system card, AI usage declaration, submission checklist, pitch outline, self-review, cost.
 
 ## What is still open
-Real-LLM numbers (blocked on Bedrock access), user interviews, slide deck, persistent human-approval flow, AI declaration signatures,
+User interviews, an independent attacker set, AI declaration signatures,
 team registration, making the repo public, rehearsal.

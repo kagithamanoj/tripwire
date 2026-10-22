@@ -34,6 +34,6 @@ Also verified: 2,000 random-Unicode fuzz inputs never crashed the detector or fi
 ## 3. Still open (be upfront)
 - Paraphrase attacks evade the detector entirely (no keyword overlap). Only the structural policy layer protects against them.
 - Value-level taint can miss a high-risk call whose arguments never appeared in the document (T15).
-- Attack and benign sets are self-authored; no independent attacker yet (Bedrock evaluation pending on quota).
+- Attack and benign sets are self-authored; no independent attacker yet. A real-model run (Haiku 5.5) is in `docs/REAL_MODEL_EVAL.md`; it also found two provenance-tracking bugs, now fixed.
 - Secrets in non-obvious encodings (base64-wrapped, split across arguments) are not detected.
 - The review queue approval flow on AWS is now persisted (fixed after this report): reviews live in a DynamoDB table, the approver token sits in Secrets Manager, and decisions are appended to the session's KMS-signed chain. See `docs/DEPLOY_AWS.md`.
