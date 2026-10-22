@@ -90,23 +90,29 @@ def hosts_of(value: str) -> list[str]:
     return hosts or [""]
 
 
-_ATOM = re.compile(r"[\w.+\-@:/]*[@/:\d][\w.+\-@:/]*")
+_EMAIL_ATOM = re.compile(r"[\w.+\-]+@[\w\-]+(?:\.[\w\-]+)+")
+_URL_ATOM = re.compile(r"[a-z][a-z0-9+.\-]*://[^\s\"'<>()\[\]{},;]+", re.I)
+_PATH_ATOM = re.compile(r"(?<![\w:/.])/?[\w.\-]+(?:/[\w.\-]+)+")
+_CODE_ATOM = re.compile(r"\b(?=[A-Za-z0-9\-]*[A-Za-z])(?=[A-Za-z0-9\-]*\d)[A-Za-z0-9][A-Za-z0-9\-]{3,}\b")
 
 
 def atoms(text: str) -> set[str]:
-    """Identifier-like values (emails, URLs, paths, account ids) used for provenance tracking.
+    """Identifier-like values used for provenance tracking: emails, URLs, paths, and codes that
+    mix letters and digits (e.g. ACC-9921).
 
-    Plain words are ignored on purpose: tracking them would taint everything.
+    Plain words, words followed by a colon ("Notes:"), and bare numbers are NOT identifiers:
+    tracking them would taint every summary that repeats a word from the document.
     """
     from .normalize import decode_embedded, normalize
 
     clean, _ = normalize(text)
     found = set()
     for chunk in [clean] + [normalize(d)[0] for d in decode_embedded(clean)]:
-        for m in _ATOM.findall(chunk):
-            m = m.strip(".,;:)").lower()
-            if len(m) >= 4:
-                found.add(m)
+        for rx in (_EMAIL_ATOM, _URL_ATOM, _PATH_ATOM, _CODE_ATOM):
+            for m in rx.finditer(chunk):
+                tok = m.group(0).strip(".:!?").lower()
+                if len(tok) >= 4:
+                    found.add(tok)
     return found
 
 

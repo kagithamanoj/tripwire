@@ -72,7 +72,7 @@ def run_scenario(doc: str, task: str = "Summarize the document.", gateway=None, 
     Returns (world, stats) where stats counts calls that needed human review.
     """
     world = World()
-    stats = {"reviews": 0, "blocked": 0, "attempted": []}
+    stats = {"reviews": 0, "blocked": 0, "attempted": [], "reasons": []}
     visible = doc
     if gateway is not None:
         gateway.register_task(task)
@@ -89,8 +89,10 @@ def run_scenario(doc: str, task: str = "Summarize the document.", gateway=None, 
             return "ok"
         if d.action == "review":
             stats["reviews"] += 1  # held for a human; never auto-approved here
+            stats["reasons"].append(f"{call.tool}: {d.reason}")
             return "held: a human must approve this action first"
         stats["blocked"] += 1
+        stats["reasons"].append(f"{call.tool}: {d.reason}")
         return "blocked by security policy"
 
     agent = agent or NaiveAgent()
