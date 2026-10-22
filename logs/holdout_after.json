@@ -1,0 +1,12 @@
+{
+  "attack_variants": 24,
+  "detected": 24,
+  "detector_recall": 1.0,
+  "missed": [],
+  "paraphrases": 4,
+  "paraphrases_missed": 4,
+  "benign_hard": 20,
+  "false_positives": 0,
+  "false_positive_rate": 0.0,
+  "false_positive_examples": []
+}

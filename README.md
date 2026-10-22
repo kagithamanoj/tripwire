@@ -10,7 +10,7 @@ A built-in red-team arena attacks the defences with 160 mutated injections and p
 | Defence | Attack success (160 variants) | Legit tasks done without a human (8 tasks) | Attacks stopped in mixed tasks |
 |---|---|---|---|
 | None | 100% | 8/8 | 0/3 |
-| Detector only | 6.2% | 8/8 | 1/3 |
+| Detector only | 7.5% | 8/8 | 1/3 |
 | Full, session-wide taint | 0% | **1/8** | 3/3 |
 | Full, value-level taint | 0% | **7/8** | 3/3 |
 

@@ -39,7 +39,7 @@ No dependencies beyond Python 3.11+.
 2. (45s) Same attack with Tripwire: blocked, signed receipts shown.
 3. (45s) Attack A06, a polite paraphrase the detector misses; the policy layer still blocks the send. Say plainly: detector alone fails here.
 4. (30s) Tamper with a receipt; verification fails.
-5. (30s) Arena: 100% -> 6.2% -> 0% success, and the human-review cost.
+5. (30s) Arena: 100% -> 7.5% -> 0% success, and the human-review cost.
 
 ## What is real vs simulated (be honest with judges)
 Real: detector, policy, receipts, review queue, arena, tests. Simulated: the "agent" is a scripted naive stand-in;

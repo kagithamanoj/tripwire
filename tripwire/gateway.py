@@ -10,6 +10,10 @@ from .receipts import ReceiptLog
 from .review import ReviewQueue
 
 _MD_IMAGE = re.compile(r"!\[[^\]]*\]\((https?://[^)\s]+)\)")
+_MD_IMAGE_REF = re.compile(r"!\[[^\]]*\]\[([^\]]*)\]")
+_MD_DEF = re.compile(r"^\s*\[([^\]]+)\]:\s*(\S+)", re.M)
+_HTML_EMBED = re.compile(
+    r"<\s*(?:img|iframe|script|link|embed|source|video|audio)\b[^>]*?(?:src|href)\s*=\s*[\"']?(https?://[^\"'\s>]+)[^>]*>", re.I)
 BLOCKED = "[content blocked by Tripwire]"
 HELD = "[content held for human review]"
 
@@ -99,7 +103,23 @@ class Gateway:
             host = urlparse(m.group(1)).hostname or ""
             return m.group(0) if self.policy.host_allowed(host) else "[image removed by Tripwire]"
 
-        out2 = _MD_IMAGE.sub(strip, out)
+        defs = {k.lower(): v for k, v in _MD_DEF.findall(out)}
+
+        def strip_ref(m):
+            url = defs.get(m.group(1).lower())
+            host = (urlparse(url).hostname or "") if url else ""
+            return m.group(0) if url and self.policy.host_allowed(host) else "[image removed by Tripwire]"
+
+        def strip_html(m):
+            host = urlparse(m.group(1)).hostname or ""
+            return m.group(0) if self.policy.host_allowed(host) else "[embed removed by Tripwire]"
+
+        def strip_def(m):
+            host = urlparse(m.group(2)).hostname or ""
+            return m.group(0) if self.policy.host_allowed(host) else ""
+
+        out2 = _HTML_EMBED.sub(strip_html, _MD_IMAGE_REF.sub(strip_ref, _MD_IMAGE.sub(strip, out)))
+        out2 = _MD_DEF.sub(strip_def, out2).strip("\n") if defs else out2
         if n or out2 != out:
             self.log.append({"type": "output_filter", "redactions": n, "images_removed": out2 != out})
         return out2

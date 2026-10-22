@@ -19,9 +19,9 @@ Optional (planned): Amazon Bedrock model as an independent attacker for held-out
 | Metric | Result | Notes |
 |---|---|---|
 | Attack success, unprotected | 100% (160/160 arena variants) | Naive agent obeys any instruction |
-| Attack success, detector only | 6.2% (10/160) | Misses paraphrase attacks |
+| Attack success, detector only | 7.5% (12/160) | Misses paraphrase attacks |
 | Attack success, policy only | 0% (0/160) | 40 variants held for human review |
-| Attack success, full | 0% (0/160) | 10 held for human review |
+| Attack success, full | 0% (0/160) | 12 held for human review |
 | Detector recall, seed corpus | 81.2% (13/16) | Misses A06, A10, A16 |
 | Detector false-positive rate | 12.5% (1/8) | B08 security-training text |
 | Benign calls needing a human | 1 of 8 benign docs | B07 forward to internal address |
@@ -46,4 +46,4 @@ Gateway false negative: engineering owner patches rules and adds the case to the
 See `THREAT_MODEL.md` T2, T3, T10, T11, T13. Coarse session-wide taint. Origin labelling is trusted from the host.
 
 ## Change log
-v0.1: initial local release, 22 unit tests.
+v0.1: initial local release, 51 unit tests.

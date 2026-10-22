@@ -21,7 +21,7 @@ Plus a **red-team arena** that attacks the defences with 160 mutated injections 
 | Defence | Attack success (160 variants) | Legit tasks done w/o human (8) | Attacks stopped in mixed tasks (3) |
 |---|---|---|---|
 | none | 100% | 8/8 | 0/3 |
-| detector only | 6.2% | 8/8 | 1/3 |
+| detector only | 7.5% | 8/8 | 1/3 |
 | full, session taint | 0% | 1/8 | 3/3 |
 | full, value taint | 0% | 7/8 | 3/3 |
 Detector recall on the 16-attack seed set is 81.2% (misses 3, all paraphrases); false-positive rate 12.5% (1 of 8 benign, a security-training text).

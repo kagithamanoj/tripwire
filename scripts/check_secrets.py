@@ -10,6 +10,10 @@ PATTERNS = {
     "private_key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "github_token": re.compile(r"gh[pousr]_[A-Za-z0-9]{30,}"),
     "aws_secret": re.compile(r"(?i)aws_secret_access_key\s*[=:]\s*\S{20,}"),
+    "slack_token": re.compile(r"xox[baprs]-[A-Za-z0-9\-]{10,}"),
+    "google_api_key": re.compile(r"AIza[0-9A-Za-z_\-]{35}"),
+    "jwt": re.compile(r"eyJ[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}"),
+    "aws_account_id_url": re.compile(r"\b\d{12}-[a-z0-9]{8}\.[a-z0-9-]+\.console\.aws"),
 }
 SKIP_DIRS = {".git", "__pycache__", "logs"}
 

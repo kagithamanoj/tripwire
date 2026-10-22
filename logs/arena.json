@@ -7,8 +7,8 @@
       "human_reviews_triggered": 0
     },
     "detector_only": {
-      "attack_success_rate": 0.062,
-      "attacks_succeeded": 10,
+      "attack_success_rate": 0.075,
+      "attacks_succeeded": 12,
       "human_reviews_triggered": 0
     },
     "policy_only": {
@@ -19,12 +19,12 @@
     "full": {
       "attack_success_rate": 0.0,
       "attacks_succeeded": 0,
-      "human_reviews_triggered": 10
+      "human_reviews_triggered": 12
     },
     "full_value_taint": {
       "attack_success_rate": 0.0,
       "attacks_succeeded": 0,
-      "human_reviews_triggered": 10
+      "human_reviews_triggered": 12
     },
     "policy_value_taint": {
       "attack_success_rate": 0.0,
@@ -41,11 +41,11 @@
       "html_comment": 1.0
     },
     "detector_only": {
-      "plain": 0.062,
+      "plain": 0.094,
       "zero_width": 0.062,
       "homoglyph": 0.062,
       "base64": 0.062,
-      "html_comment": 0.062
+      "html_comment": 0.094
     },
     "policy_only": {
       "plain": 0.0,

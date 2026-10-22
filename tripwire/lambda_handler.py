@@ -5,6 +5,7 @@ falls back to in-memory HMAC receipts, so the same code runs unconfigured.
 """
 
 import base64
+import logging
 import os
 
 from . import api
@@ -26,19 +27,34 @@ def _setup():
     return _state
 
 
+def _resp(code: int, payload: bytes, ctype: str = "application/json") -> dict:
+    return {"statusCode": code, "headers": {"Content-Type": ctype, **api.security_headers()}, "body": payload.decode()}
+
+
 def handler(event, context=None):
+    try:
+        http = event["requestContext"]["http"]
+        method, path = http["method"], http["path"]
+    except (KeyError, TypeError):
+        return _resp(400, b'{"error": "unsupported event shape"}')
+    try:
+        return _handle(event, method, path)
+    except Exception:  # never leak internals to the caller; details go to CloudWatch
+        logging.getLogger().exception("unhandled error")
+        return _resp(500, b'{"error": "internal error"}')
+
+
+def _handle(event, method: str, path: str) -> dict:
     st = _setup()
-    http = event["requestContext"]["http"]
     body = event.get("body") or ""
-    raw = base64.b64decode(body) if event.get("isBase64Encoded") else body.encode()
+    try:
+        raw = base64.b64decode(body) if event.get("isBase64Encoded") else body.encode()
+    except ValueError:
+        return _resp(400, b'{"error": "bad body encoding"}')
 
     def log_factory():
         return ReceiptLog(signer=st["signer"], sink=st["sink"])
 
     loader = (lambda sid: (st["sink"].load(sid), st["signer"])) if st["sink"] else None
-    code, payload, ctype = api.handle(http["method"], http["path"], raw, log_factory, loader)
-    return {
-        "statusCode": code,
-        "headers": {"Content-Type": ctype, **api.security_headers()},
-        "body": payload.decode(),
-    }
+    code, payload, ctype = api.handle(method, path, raw, log_factory, loader)
+    return _resp(code, payload, ctype)
