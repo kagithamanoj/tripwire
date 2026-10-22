@@ -32,7 +32,7 @@ The deployed product contains **no model calls**; the live demo is deterministic
 - Ran the builder interviews together for the problem-evidence slide, and both present for judging and Q&A.
 - Both have collaborator access to the repository, reviewed this declaration, and signed it.
 
-**What Claude did, for comparison:** wrote the code, tests, infrastructure template, scripts and documents; proposed the design rules (no model in the enforcement path, policy decides, fail closed, human approval for risky or external actions); and ran the red-team analysis, the arena and the test runs when asked. Verification came from running the code: 70 tests, the evaluation, the 160-variant arena, the utility benchmark, the secret scan, the real-model run and the live AWS demo.
+**What Claude did, for comparison:** wrote the code, tests, infrastructure template, scripts and documents; proposed the design rules (no model in the enforcement path, policy decides, fail closed, human approval for risky or external actions); and ran the red-team analysis, the arena and the test runs when asked. Verification came from running the code: 72 tests, the evaluation, the 160-variant arena, the utility benchmark, the secret scan, the real-model run and the live AWS demo.
 
 ## Declaration
 We declare that the above is a complete and accurate account of generative-AI and automated coding tools used in this project.
