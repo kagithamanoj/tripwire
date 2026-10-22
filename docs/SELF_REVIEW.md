@@ -26,7 +26,7 @@ CI builds and smoke-tests the container. Still open: real-LLM (Bedrock) results,
 3. **Detector recall is 81.2%** with a known false positive on security-training text.
 4. **Simulated agent and tools.** No real LLM, no real side effects.
 5. **Origin labelling is trusted** from the host app (threat T11).
-6. **Nothing deployed.** AWS plan is untested.
+6. **Demo endpoint is public and unauthenticated** (deployed on AWS; see `DEPLOY_AWS.md` limits).
 7. **No user validation** of the problem.
 
 ## Priority fixes (highest judged value first)
