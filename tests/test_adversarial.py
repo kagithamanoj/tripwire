@@ -44,7 +44,7 @@ class TestEgressParsing(unittest.TestCase):
 class TestSecrets(unittest.TestCase):
     def test_token_families_detected(self):
         samples = ["ghp_" + "a" * 36, "xoxb-" + "1" * 12 + "-" + "a" * 24, "AIza" + "B" * 35,
-                   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abcdefghijklmnop",
+                   "ey" + "JhbGciOiJIUzI1NiJ9." + "eyJzdWIiOiIxMjM0NTY3ODkwIn0." + "abcdefghijklmnop",  # fake JWT, built at runtime
                    "Bearer " + "a" * 30, "sk-ant-" + "a" * 30]
         for s in samples:
             self.assertEqual(redact(s)[1], 1, s[:12])
