@@ -48,4 +48,4 @@ Gateway false negative: engineering owner patches rules and adds the case to the
 See `THREAT_MODEL.md` T2, T3, T10, T11, T13. Coarse session-wide taint. Origin labelling is trusted from the host.
 
 ## Change log
-v0.1: initial local release, 60 unit tests.
+v0.1: initial local release, 70 unit tests.
