@@ -1,7 +1,7 @@
 # Deploying Tripwire on AWS
 
 **Status: deployed and smoke-tested** in `us-east-2` on 2026-10-22 (stack `tripwire-demo`).
-Live demo: https://qtu25iuq5qyc72x642eofcef2a0bbogo.lambda-url.us-east-2.on.aws/ (public, no auth, demo data only).
+Live demo: taken down to save cost, so the hosted service is not available right now. Redeploy it with the steps below.
 
 ## Architecture on AWS
 ```mermaid

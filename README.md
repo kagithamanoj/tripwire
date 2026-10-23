@@ -5,7 +5,7 @@ Track: **SECURE** (All Day AI Hackathon 2026)
 
 [![CI](https://github.com/kagithamanoj/tripwire/actions/workflows/ci.yml/badge.svg)](https://github.com/kagithamanoj/tripwire/actions/workflows/ci.yml)
 
-**Live demo:** https://qtu25iuq5qyc72x642eofcef2a0bbogo.lambda-url.us-east-2.on.aws/ (public, no auth, demo data only). Check it: `curl <url>/healthz` returns `{"ok": true}`.
+**Live demo:** taken down to save cost, so the hosted service is not available right now. Run it locally (see below) or redeploy it with `scripts/deploy_aws.sh`; `docs/DEPLOY_AWS.md` has the steps.
 
 Tripwire is a firewall for tool-using AI agents. It scans what the agent reads, remembers that the agent has seen untrusted
 content ("taint") so risky actions need a human, filters what it says, and signs every decision into a tamper-evident log.
@@ -24,7 +24,7 @@ content and recovers almost all legitimate work. The one task still routed to a 
 *Self-authored attack set against a simulated naive agent. See `docs/THREAT_MODEL.md` for limits.
 With a real model (Claude Haiku 5.5, two runs of the 10 attacks): 9 of 20 succeeded without Tripwire, 0 of 20 with it; legitimate work completed 7 of 9 times with value-level taint. Details and caveats: `docs/REAL_MODEL_EVAL.md`.*
 
-## Run it locally (fallback if the live URL is down)
+## Run it locally
 Needs Python 3.11+ and nothing else (no packages, no accounts, no keys).
 ```bash
 git clone https://github.com/kagithamanoj/tripwire.git && cd tripwire
